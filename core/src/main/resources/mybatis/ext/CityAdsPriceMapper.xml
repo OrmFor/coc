@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.CityAdsPriceMapper">
+    <resultMap id="associationMap" type="com.yinmimoney.web.p2pnew.pojo.CityAdsPrice">
+
+    </resultMap>
+    <sql id="map_params_where_condition_ext">
+        <if test="extConditions != null">
+            <!-- 扩展条件 -->
+        </if>
+    </sql>
+
+    <resultMap id="getHotListResult" type="com.yinmimoney.web.p2pnew.dto.CityAdsPriceDto">
+        <result column="city_code" property="cityCode"/>
+        <result column="city_name" property="cityName"/>
+        <result column="unit_price" property="unitPrice"/>
+        <result column="create_time" property="createTime"/>
+        <result column="expire_time" property="expireTime"/>
+        <result column="amount" property="amount"/>
+        <result column="city_sell_status" property="citySellStatus"/>
+    </resultMap>
+
+    <resultMap id="getByCityCodeAndUserCodeResult" type="com.yinmimoney.web.p2pnew.dto.CityAdsPriceDetailDto">
+        <result column="city_code" property="cityCode"/>
+        <result column="city_name" property="cityName"/>
+        <result column="unit_price" property="unitPrice"/>
+        <result column="create_time" property="createTime"/>
+        <result column="expire_time" property="expireTime"/>
+        <result column="user_code" property="userCode"/>
+        <result column="is_expire" property="isExpire"/>
+    </resultMap>
+
+
+    <select id="getCityAdsPriceList" resultMap="getHotListResult">
+        select sum(a.unit_price) unit_price,a.user_code,
+        a.city_code , a.city_name , a.create_time , a.expire_time,b.amount,b.city_sell_status
+        from bc_city_ads_price a
+        left join bc_city_detail b on a.city_code = b.city_code
+        <where>
+
+            a.create_time &lt;= now()
+            and a.expire_time &gt;= now()
+            and a.is_expire = 0
+        </where>
+        GROUP BY a.city_code,a.user_code,date(a.`expire_time`)
+        order by unit_price desc, a.id asc
+        limit #{beginIndex},#{pageSize};
+    </select>
+
+
+    <select id="getCityAdsPriceListCount" resultType="java.lang.Integer">
+        select count(*) from (
+        select sum(a.unit_price) unit_price,user_code,
+        city_code , city_name , create_time , expire_time from bc_city_ads_price a
+        <where>
+            create_time &lt;= now()
+            and expire_time &gt;= now()
+            and is_expire = 0
+        </where>
+        GROUP BY city_code,user_code,date(`expire_time`)
+        ) t
+    </select>
+
+    <select id="getByCityCodeAndUserCode" resultMap="getByCityCodeAndUserCodeResult">
+        select sum(a.unit_price) unit_price,user_code,
+        city_code , city_name ,  (select min(create_time) create_time  from bc_city_ads_price b where
+        b.user_code = #{userCode} and a.city_code = b.city_code
+        and b.is_expire = 0 and create_time &lt;= now()
+        and b.expire_time &gt;= now()) as create_time, expire_time,0 as is_expire from bc_city_ads_price a
+        <where>
+            city_code = #{cityCode}
+            and user_code = #{userCode}
+            and  create_time &lt;= now()
+            and expire_time &gt;= now()
+            and a.is_expire = 0
+
+        </where>
+        GROUP BY city_code,user_code,date(`expire_time`)
+        limit 1;
+    </select>
+
+
+
+    <select id="getMyCityAdsPriceList" resultMap="getByCityCodeAndUserCodeResult">
+        select sum(a.unit_price) unit_price,user_code,
+
+        expire_time &lt;= now()  as is_expire,
+
+        city_code , city_name ,
+        (select min(create_time) create_time  from bc_city_ads_price b where
+        b.user_code = #{userCode} and a.city_code = b.city_code
+        and b.is_expire = 0 and create_time &lt;= now()
+        and b.expire_time &gt;= now()) as create_time, expire_time from bc_city_ads_price a
+        <where>
+           user_code = #{userCode}
+            and a.is_expire = 0
+            and create_time &lt;= now()
+            and expire_time &gt;= now()
+
+        </where>
+        GROUP BY city_code,user_code,date(`expire_time`)
+        order by id desc
+
+    </select>
+</mapper>

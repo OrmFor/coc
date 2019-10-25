@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.CityDetailMapper">
+    <resultMap id="associationMap" type="com.yinmimoney.web.p2pnew.pojo.CityDetail">
+
+    </resultMap>
+
+    <resultMap id="getMyCityListResult" type="com.yinmimoney.web.p2pnew.dto.CityDto">
+        <result column="city_code" property="cityCode"/>
+        <result column="city_name" property="cityName"/>
+    </resultMap>
+    <sql id="map_params_where_condition_ext">
+        <if test="extConditions != null">
+            <!-- 扩展条件 -->
+        </if>
+    </sql>
+
+    <select id="getMyCityList" resultMap="getMyCityListResult">
+select a.city_code,a.city_name from `bc_city` a , `bc_city_detail` c where
+c.`user_code` = #{userCode} and
+c.`city_code` = a.`city_code` and
+not EXISTS (
+select `city_code`  from `bc_city_ads_price` b where b.`city_code` = a.`city_code`
+and b.is_expire = 0
+and b.create_time &lt;= now()
+and b.expire_time &gt;= now()
+and b.`user_code` = #{userCode}
+)
+    </select>
+</mapper>

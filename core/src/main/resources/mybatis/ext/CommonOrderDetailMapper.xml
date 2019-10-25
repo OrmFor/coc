@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.CommonOrderDetailMapper" >
+  <resultMap id="associationMap" type="com.yinmimoney.web.p2pnew.pojo.CommonOrderDetail" >
+    
+  </resultMap>
+
+    <resultMap id="getHotCityResult" type="com.yinmimoney.web.p2pnew.dto.HotCity">
+        <result column="city_name" property="cityName" />
+        <result column="city_code" property="cityCode" />
+        <result column="count" property="count" />
+        <result property="houseName" column="house_name"/>
+
+    </resultMap>
+
+    <resultMap id="platformIncomeInfoMap" type="com.yinmimoney.web.p2pnew.dto.PlatformIncomeInfo" extends="associationMap">
+        <result property="time" column="time"/>
+        <result property="income" column="income"/>
+    </resultMap>
+
+    <resultMap id="getDataLookInfosMap" type="com.yinmimoney.web.p2pnew.dto.DataLookInfo" extends="associationMap">
+        <result property="item" column="item"/>
+        <result property="name" column="name"/>
+        <result property="number" column="number"/>
+    </resultMap>
+
+    <resultMap id="getCityHotLastedResult" type="com.yinmimoney.web.p2pnew.dto.HotCityLasted" >
+        <result property="cityCode" column="city_code"/>
+        <result property="cityName" column="city_name"/>
+        <result property="houseName" column="house_name"/>
+        <result property="count" column="count"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <resultMap id="billMap" type="com.yinmimoney.web.p2pnew.dto.BillStatisticsDto">
+        <result property="type" column="type"/>
+        <result property="name" column="name"/>
+        <result property="money" column="money"/>
+    </resultMap>
+
+  <sql id="map_params_where_condition_ext" >
+	<if test="extConditions != null">
+		<!-- 扩展条件 -->
+	</if>
+  </sql>
+
+    <select id="getHotCity1"  resultMap="getHotCityResult">
+
+SELECT
+	tt.city_code,
+	tt.city_name,
+	IFNULL(
+		house_name,
+		'城市聊天室'
+	) AS house_name,
+	sum(
+		CASE operate_type
+		WHEN 'speak' THEN
+			1
+		WHEN 'like' THEN
+			5
+		END
+	) AS count
+FROM(
+select DISTINCT(txid),a.city_code,
+	a.city_name,
+	a.create_time,a.operate_type from common_order_detail a
+   where operate_type in ('speak','like')
+ and date(create_time) &lt;= #{endTime}
+ and date(create_time) &gt;= #{startTime}
+) tt LEFT JOIN chat_house b ON tt.city_code = b.city_code
+
+GROUP BY
+	city_code
+ORDER BY
+	count DESC
+ limit #{beginIndex},#{pageSize}
+
+    </select>
+    <select id="getHotCity" resultMap="getHotCityResult">
+        select sum(countSum)  count , city_code,
+        city_name,
+        house_name,
+        user_code,create_time from (
+        SELECT
+        CASE
+        WHEN sum(countSum) > 30 THEN
+        30
+        ELSE
+        sum(countSum)
+        END AS countSum,
+        city_code,
+        city_name,
+        house_name,
+        user_code,create_time
+        FROM
+        (
+        SELECT
+        sum(count) countSum,
+        city_code,
+        city_name,
+        house_name,
+        user_code,
+        DATE_FORMAT(create_time,'%Y-%m-%d') create_time
+        FROM
+        (
+        SELECT
+        tt.city_code,
+        tt.city_name,
+        IFNULL(
+        house_name,
+        '城市聊天室'
+        ) AS house_name,
+        sum(
+        CASE operate_type
+        WHEN 'speak' THEN
+        1
+        WHEN 'like' THEN
+        5
+         WHEN 'picture' THEN
+        2
+         WHEN 'picture_like' THEN
+        5
+        END
+        ) AS count,
+        user_code,
+        tt.create_time
+        FROM
+        (
+        SELECT DISTINCT
+        (txid),
+        a.city_code,
+        a.user_code,
+        a.city_name,
+        a.create_time,
+        a.operate_type
+        FROM
+        common_order_detail a
+        WHERE
+        operate_type IN ('speak', 'like','picture','picture_like')
+        AND type = 'OUT'
+        ) tt
+        LEFT JOIN chat_house b ON tt.city_code = b.city_code
+        GROUP BY
+        city_code,
+        user_code,
+        create_time
+        ) ttt
+
+        GROUP BY
+        city_code,
+        user_code
+        ,create_time
+        ) tttt
+
+        GROUP BY
+        city_code,user_code,create_time
+        ) t5
+        where  date(create_time) &lt;= #{endTime}
+        AND date(create_time) &gt;= #{startTime}
+        GROUP BY
+        city_code order by count desc
+        limit #{beginIndex},#{pageSize}
+
+    </select>
+
+    <select id="getHotCityCount"  resultType="java.lang.Integer" >
+select count(1) from (
+select count(1) , a.city_code
+from
+common_order_detail a
+LEFT JOIN
+chat_house b on a.city_code = b.city_code
+where operate_type in ('speak','like')
+ and date(create_time) &lt;= #{endTime}
+ and date(create_time) &gt;= #{startTime}
+GROUP BY city_code
+) tt
+    </select>
+
+    <select id="getMoneyOut" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        select sum(amount) from common_order_detail
+        where user_code = #{userCode}
+        AND type='OUT'
+    </select>
+
+    <select id="getMoneyIn" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        select sum(amount) from common_order_detail
+        where user_code = #{userCode}
+        AND type='IN'
+    </select>
+
+    <select id="getPlatformIncomeInfoOthers" resultMap="platformIncomeInfoMap" parameterType="java.util.Map">
+        SELECT SUM(amount) as 'income',DATE_FORMAT(create_time,#{dateFormat}) as 'time'
+        FROM common_order_detail
+        WHERE  date(create_time) <![CDATA[ >= ]]> date(#{startTime})
+        AND date(create_time) <![CDATA[ <= ]]> date(#{endTime})
+        AND type='IN'
+        AND user_code='platform_001'
+    GROUP BY DATE_FORMAT(create_time,#{dateFormat})
+    </select>
+
+
+    <select id="getDataLookInfos" resultMap="getDataLookInfosMap" parameterType="java.lang.String">
+        SELECT '今日其他交易数量' AS name,'total_other_trade' AS  item,count(1) AS number FROM  common_order_detail WHERE type='OUT' AND TO_DAYS(create_time)=TO_DAYS(NOW())
+       UNION ALL
+       SELECT '今日平台其他收益' AS name,'total_income' AS  item,sum(amount) AS number FROM  common_order_detail WHERE type='IN' AND user_code=#{platCode} AND TO_DAYS(create_time)=TO_DAYS(NOW())
+    </select>
+
+    <select id="getCityHotLasted1" resultMap="getCityHotLastedResult">
+SELECT
+	tt.city_code,
+	tt.city_name,
+	max(create_time) create_time,
+	IFNULL(
+		house_name,
+		'城市聊天室'
+	) AS house_name,
+	sum(
+		CASE operate_type
+		WHEN 'speak' THEN
+			1
+		WHEN 'like' THEN
+			5
+		END
+	) AS count
+FROM(
+select DISTINCT(txid),a.city_code,
+	a.city_name,
+	a.create_time,a.operate_type from common_order_detail a
+) tt LEFT JOIN chat_house b ON tt.city_code = b.city_code
+WHERE
+	operate_type IN ('speak', 'like')
+GROUP BY
+	city_code
+ORDER BY
+	create_time DESC
+limit #{beginIndex},#{pageSize}
+
+    </select>
+
+
+    <select id="getCityHotLasted" resultMap="getCityHotLastedResult">
+select MAX(a.create_time) create_time,a.city_code,a.city_name,IFNULL(b.house_name,'城市聊天室') as house_name
+from common_order_detail a
+LEFT JOIN chat_house  b ON a.city_code = b.city_code
+where	operate_type IN ('speak', 'like','picture','picture_like') and
+  a.type = 'OUT'
+GROUP BY a.city_code
+ORDER BY create_time
+desc
+limit #{beginIndex},#{pageSize}
+
+    </select>
+
+
+    <select id="getCityHotLastedQuartz" resultMap="getCityHotLastedResult">
+select MAX(a.create_time) create_time,a.city_code,a.city_name,IFNULL(b.house_name,'城市聊天室') as house_name
+from common_order_detail a
+LEFT JOIN chat_house  b ON a.city_code = b.city_code
+where	operate_type IN ('speak', 'like','picture','picture_like') and
+  a.type = 'OUT'
+GROUP BY a.city_code
+ORDER BY create_time
+desc
+limit 60
+
+    </select>
+
+
+
+    <select id="getCityHotNew" resultType="java.lang.Integer">
+        select sum(countSum)  count  from (
+        SELECT
+        CASE
+        WHEN sum(countSum) > 30 THEN
+        30
+        ELSE
+        sum(countSum)
+        END AS countSum,
+        city_code,
+        city_name,
+        house_name,
+        user_code,create_time
+        FROM
+        (
+        SELECT
+        sum(count) countSum,
+        city_code,
+        city_name,
+        house_name,
+        user_code,
+        DATE_FORMAT(create_time,'%Y-%m-%d') create_time
+        FROM
+        (
+        SELECT
+        tt.city_code,
+        tt.city_name,
+        IFNULL(
+        house_name,
+        '城市聊天室'
+        ) AS house_name,
+        sum(
+        CASE operate_type
+        WHEN 'speak' THEN
+        1
+        WHEN 'like' THEN
+        5
+        WHEN 'picture' THEN
+        2
+        WHEN 'picture_like' THEN
+        5
+        END
+        ) AS count,
+        user_code,
+        tt.create_time
+        FROM
+        (
+        SELECT DISTINCT
+        (txid),
+        a.city_code,
+        a.user_code,
+        a.city_name,
+        a.create_time,
+        a.operate_type
+        FROM
+        common_order_detail a
+        WHERE
+        operate_type IN ('speak', 'like','picture','picture_like')
+        AND type = 'OUT'
+        ) tt
+        LEFT JOIN chat_house b ON tt.city_code = b.city_code
+        GROUP BY
+        city_code,
+        user_code,
+        create_time
+        ) ttt
+
+        GROUP BY
+        city_code,
+        user_code
+        ,create_time
+        ) tttt
+
+        GROUP BY
+        city_code,user_code,create_time
+        ) t5
+        where  date(create_time) &lt;= #{endTime}
+        AND date(create_time) &gt;= #{startTime}
+        AND city_code = #{cityCode}
+        limit 1
+    </select>
+
+
+    <select id="getCityHotLastedCount" resultType="java.lang.Integer">
+select count(1) from (
+select
+a.city_code,a.city_name,max(create_time) create_time,
+IFNULL(house_name,'城市聊天室') as house_name,
+sum(
+CASE operate_type
+WHEN 'speak' THEN 1/2
+WHEN 'like'  THEN 5/4
+WHEN 'picture' THEN 1/2
+WHEN 'picture_like'  THEN 5/4
+END
+) as count
+from
+common_order_detail a
+LEFT JOIN
+chat_house b on a.city_code = b.city_code
+where operate_type in ('speak','like','picture','picture_like')
+GROUP BY city_code
+) tt
+    </select>
+
+    <select id="getCityBillList" resultMap="BaseResultMap" parameterType="java.util.Map">
+     SELECT <include refid="Base_Column_List" /> from common_order_detail cod WHERE ((cod.operate_type in ('Ads','house','chatroomAds','city_picture_open','city_ads_price','mod_ads_price') AND cod.type='OUT')
+       OR (cod.operate_type IN ('speak','picture') AND cod.type='IN')
+       OR (cod.operate_type IN ('like','picture_like') AND cod.type='IN' AND cod.amount=0.02)
+       ) AND cod.user_code=#{userCode} ORDER BY cod.create_time DESC LIMIT #{beginIndex},#{pageSize}
+    </select>
+
+    <select id="getCityBillCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(1) from common_order_detail cod WHERE ((cod.operate_type in ('Ads','house','chatroomAds','city_picture_open','city_ads_price','mod_ads_price') AND cod.type='OUT')
+        OR (cod.operate_type IN ('speak','picture') AND cod.type='IN')
+        OR (cod.operate_type IN ('like','picture_like') AND cod.type='IN' AND cod.amount=0.02)
+        ) AND cod.user_code=#{userCode}
+    </select>
+
+    <select id="getCommunicateBillList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT <include refid="Base_Column_List" /> from common_order_detail cod WHERE (
+        (cod.operate_type IN ('speak','picture') AND cod.type='OUT')
+        OR (cod.operate_type IN ('like','picture_like') AND cod.amount>0.02)
+        ) AND cod.user_code=#{userCode} ORDER BY cod.create_time DESC LIMIT #{beginIndex},#{pageSize}
+    </select>
+
+    <select id="getCommunicateBillCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(1) from common_order_detail cod WHERE (
+        (cod.operate_type IN ('speak','picture') AND cod.type='OUT')
+        OR (cod.operate_type IN ('like','picture_like') AND cod.amount>0.02)
+        ) AND cod.user_code=#{userCode}
+    </select>
+
+    <select id="getCityBillIn" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+           SELECT IFNULL(sum(amount),0) from common_order_detail cod WHERE
+        ((cod.operate_type IN ('speak','picture') AND cod.type='IN')
+        OR (cod.operate_type IN ('like','picture_like') AND cod.type='IN' AND cod.amount=0.02)
+        ) AND cod.user_code=#{userCode}
+    </select>
+
+    <select id="getCityBillOut" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+        SELECT IFNULL(sum(amount),0) from common_order_detail cod WHERE
+       (cod.operate_type in ('Ads','house','chatroomAds','city_picture_open','city_ads_price','mod_ads_price') AND cod.type='OUT')
+         AND cod.user_code=#{userCode}
+    </select>
+
+    <select id="getCommunityBillIn" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+        SELECT IFNULL(sum(amount),0) from common_order_detail cod WHERE
+         (cod.operate_type IN ('like','picture_like') AND cod.amount>0.02 AND cod.type='IN')
+         AND cod.user_code=#{userCode}
+    </select>
+
+    <select id="getCommunityBillOut" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+    SELECT IFNULL(sum(amount),0) from common_order_detail cod WHERE (
+    (cod.operate_type IN ('speak','picture') AND cod.type='OUT')
+    OR (cod.operate_type IN ('like','picture_like') AND cod.amount>0.02 AND cod.type='OUT')
+    ) AND cod.user_code=#{userCode}
+    </select>
+
+</mapper>

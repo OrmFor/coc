@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.PlatformMapper" >
+  <resultMap id="BaseResultMap" type="com.yinmimoney.web.p2pnew.pojo.Platform" extends="associationMap">
+	<id column="id" property="id" />
+	<result column="platform_code" property="platformCode" />
+	<result column="plat_name" property="platName" />
+	<result column="amount" property="amount" />
+	<result column="currency" property="currency" />
+	<result column="fee_rate" property="feeRate" />
+	<result column="wallet_address" property="walletAddress" />
+	<result column="client_identifier" property="clientIdentifier" />
+	<result column="client_secret" property="clientSecret" />
+	<result column="webhook_secret" property="webhookSecret" />
+	<result column="webhook_url" property="webhookUrl" />
+	<result column="oauth_identifier" property="oauthIdentifier" />
+	<result column="oauth_redirect_url" property="oauthRedirectUrl" />
+	<result column="palt_message" property="paltMessage" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+		`id`
+		,`platform_code`
+		,`plat_name`
+		,`amount`
+		,`currency`
+		,`fee_rate`
+		,`wallet_address`
+		,`client_identifier`
+		,`client_secret`
+		,`webhook_secret`
+		,`webhook_url`
+		,`oauth_identifier`
+		,`oauth_redirect_url`
+		,`palt_message`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `bc_platform`
+    WHERE `id` = #{id}
+  </select>
+  <select id="getByCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `bc_platform`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+	LIMIT 1
+  </select>
+  <select id="aggregate" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT ${aggregate_sql} FROM `bc_platform`
+    <include refid="map_params_where_condition" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    DELETE FROM `bc_platform`
+    WHERE `id` = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.yinmimoney.web.p2pnew.pojo.Platform" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `bc_platform` (
+	  `platform_code`
+	  ,`plat_name`
+	  ,`amount`
+	  ,`currency`
+	  ,`fee_rate`
+	  ,`wallet_address`
+	  ,`client_identifier`
+	  ,`client_secret`
+	  ,`webhook_secret`
+	  ,`webhook_url`
+	  ,`oauth_identifier`
+	  ,`oauth_redirect_url`
+	  ,`palt_message`
+      )
+    VALUES (
+		  
+		  #{platformCode}
+		  ,
+		  #{platName}
+		  ,
+		  #{amount}
+		  ,
+		  #{currency}
+		  ,
+		  #{feeRate}
+		  ,
+		  #{walletAddress}
+		  ,
+		  #{clientIdentifier}
+		  ,
+		  #{clientSecret}
+		  ,
+		  #{webhookSecret}
+		  ,
+		  #{webhookUrl}
+		  ,
+		  #{oauthIdentifier}
+		  ,
+		  #{oauthRedirectUrl}
+		  ,
+		  #{paltMessage}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yinmimoney.web.p2pnew.pojo.Platform" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `bc_platform`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+		  <if test="platformCode != null" >
+			`platform_code`,
+		  </if>
+		  <if test="platName != null" >
+			`plat_name`,
+		  </if>
+		  <if test="amount != null" >
+			`amount`,
+		  </if>
+		  <if test="currency != null" >
+			`currency`,
+		  </if>
+		  <if test="feeRate != null" >
+			`fee_rate`,
+		  </if>
+		  <if test="walletAddress != null" >
+			`wallet_address`,
+		  </if>
+		  <if test="clientIdentifier != null" >
+			`client_identifier`,
+		  </if>
+		  <if test="clientSecret != null" >
+			`client_secret`,
+		  </if>
+		  <if test="webhookSecret != null" >
+			`webhook_secret`,
+		  </if>
+		  <if test="webhookUrl != null" >
+			`webhook_url`,
+		  </if>
+		  <if test="oauthIdentifier != null" >
+			`oauth_identifier`,
+		  </if>
+		  <if test="oauthRedirectUrl != null" >
+			`oauth_redirect_url`,
+		  </if>
+		  <if test="paltMessage != null" >
+			`palt_message`,
+		  </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+		  <if test="platformCode != null" >
+			#{platformCode},
+		  </if>
+		  <if test="platName != null" >
+			#{platName},
+		  </if>
+		  <if test="amount != null" >
+			#{amount},
+		  </if>
+		  <if test="currency != null" >
+			#{currency},
+		  </if>
+		  <if test="feeRate != null" >
+			#{feeRate},
+		  </if>
+		  <if test="walletAddress != null" >
+			#{walletAddress},
+		  </if>
+		  <if test="clientIdentifier != null" >
+			#{clientIdentifier},
+		  </if>
+		  <if test="clientSecret != null" >
+			#{clientSecret},
+		  </if>
+		  <if test="webhookSecret != null" >
+			#{webhookSecret},
+		  </if>
+		  <if test="webhookUrl != null" >
+			#{webhookUrl},
+		  </if>
+		  <if test="oauthIdentifier != null" >
+			#{oauthIdentifier},
+		  </if>
+		  <if test="oauthRedirectUrl != null" >
+			#{oauthRedirectUrl},
+		  </if>
+		  <if test="paltMessage != null" >
+			#{paltMessage},
+		  </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yinmimoney.web.p2pnew.pojo.Platform" >
+    UPDATE `bc_platform`
+    <set >
+	  <if test="platformCode != null" >
+        `platform_code` = #{platformCode},
+      </if>
+	  <if test="platName != null" >
+        `plat_name` = #{platName},
+      </if>
+	  <if test="amount != null" >
+        `amount` = #{amount},
+      </if>
+	  <if test="currency != null" >
+        `currency` = #{currency},
+      </if>
+	  <if test="feeRate != null" >
+        `fee_rate` = #{feeRate},
+      </if>
+	  <if test="walletAddress != null" >
+        `wallet_address` = #{walletAddress},
+      </if>
+	  <if test="clientIdentifier != null" >
+        `client_identifier` = #{clientIdentifier},
+      </if>
+	  <if test="clientSecret != null" >
+        `client_secret` = #{clientSecret},
+      </if>
+	  <if test="webhookSecret != null" >
+        `webhook_secret` = #{webhookSecret},
+      </if>
+	  <if test="webhookUrl != null" >
+        `webhook_url` = #{webhookUrl},
+      </if>
+	  <if test="oauthIdentifier != null" >
+        `oauth_identifier` = #{oauthIdentifier},
+      </if>
+	  <if test="oauthRedirectUrl != null" >
+        `oauth_redirect_url` = #{oauthRedirectUrl},
+      </if>
+	  <if test="paltMessage != null" >
+        `palt_message` = #{paltMessage},
+      </if>
+    </set>
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yinmimoney.web.p2pnew.pojo.Platform" >
+	UPDATE `bc_platform` SET
+        `platform_code` = #{platformCode},
+        `plat_name` = #{platName},
+        `amount` = #{amount},
+        `currency` = #{currency},
+        `fee_rate` = #{feeRate},
+        `wallet_address` = #{walletAddress},
+        `client_identifier` = #{clientIdentifier},
+        `client_secret` = #{clientSecret},
+        `webhook_secret` = #{webhookSecret},
+        `webhook_url` = #{webhookUrl},
+        `oauth_identifier` = #{oauthIdentifier},
+        `oauth_redirect_url` = #{oauthRedirectUrl},
+        `palt_message` = #{paltMessage}
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByCondition" parameterType="java.util.Map" >
+    UPDATE `bc_platform`
+    <set>
+	  <if test="entity.platformCode != null" >
+        `platform_code` = #{entity.platformCode},
+      </if>
+	  <if test="entity.platName != null" >
+        `plat_name` = #{entity.platName},
+      </if>
+	  <if test="entity.amount != null" >
+        `amount` = #{entity.amount},
+      </if>
+	  <if test="entity.currency != null" >
+        `currency` = #{entity.currency},
+      </if>
+	  <if test="entity.feeRate != null" >
+        `fee_rate` = #{entity.feeRate},
+      </if>
+	  <if test="entity.walletAddress != null" >
+        `wallet_address` = #{entity.walletAddress},
+      </if>
+	  <if test="entity.clientIdentifier != null" >
+        `client_identifier` = #{entity.clientIdentifier},
+      </if>
+	  <if test="entity.clientSecret != null" >
+        `client_secret` = #{entity.clientSecret},
+      </if>
+	  <if test="entity.webhookSecret != null" >
+        `webhook_secret` = #{entity.webhookSecret},
+      </if>
+	  <if test="entity.webhookUrl != null" >
+        `webhook_url` = #{entity.webhookUrl},
+      </if>
+	  <if test="entity.oauthIdentifier != null" >
+        `oauth_identifier` = #{entity.oauthIdentifier},
+      </if>
+	  <if test="entity.oauthRedirectUrl != null" >
+        `oauth_redirect_url` = #{entity.oauthRedirectUrl},
+      </if>
+	  <if test="entity.paltMessage != null" >
+        `palt_message` = #{entity.paltMessage},
+      </if>
+      <foreach collection="entity.nullColums" item="nullColum">
+        `${nullColum}` = NULL,
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <update id="updateIncreateNumbers" parameterType="java.util.Map" >
+    UPDATE `bc_platform`
+    <set>
+      <foreach collection="increateNumbers" item="numberCloums">
+        `${numberCloums.column}` = `${numberCloums.column}` + #{numberCloums.number},
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <sql id="map_params_where_condition" >
+    <trim prefix="WHERE" prefixOverrides="AND">
+	  <if test="id != null" >
+        AND `id` = #{id}
+	  </if>
+	  <if test="platformCode != null" >
+        AND `platform_code` = #{platformCode}
+	  </if>
+	  <if test="platName != null" >
+        AND `plat_name` = #{platName}
+	  </if>
+	  <if test="amount != null" >
+        AND `amount` = #{amount}
+	  </if>
+	  <if test="currency != null" >
+        AND `currency` = #{currency}
+	  </if>
+	  <if test="feeRate != null" >
+        AND `fee_rate` = #{feeRate}
+	  </if>
+	  <if test="walletAddress != null" >
+        AND `wallet_address` = #{walletAddress}
+	  </if>
+	  <if test="clientIdentifier != null" >
+        AND `client_identifier` = #{clientIdentifier}
+	  </if>
+	  <if test="clientSecret != null" >
+        AND `client_secret` = #{clientSecret}
+	  </if>
+	  <if test="webhookSecret != null" >
+        AND `webhook_secret` = #{webhookSecret}
+	  </if>
+	  <if test="webhookUrl != null" >
+        AND `webhook_url` = #{webhookUrl}
+	  </if>
+	  <if test="oauthIdentifier != null" >
+        AND `oauth_identifier` = #{oauthIdentifier}
+	  </if>
+	  <if test="oauthRedirectUrl != null" >
+        AND `oauth_redirect_url` = #{oauthRedirectUrl}
+	  </if>
+	  <if test="paltMessage != null" >
+        AND `palt_message` = #{paltMessage}
+	  </if>
+	  <if test="condition != null">
+	  <if test="condition.id != null" >
+        AND `id` = #{condition.id}
+	  </if>
+	  <if test="condition.platformCode != null" >
+        AND `platform_code` = #{condition.platformCode}
+	  </if>
+	  <if test="condition.platName != null" >
+        AND `plat_name` = #{condition.platName}
+	  </if>
+	  <if test="condition.amount != null" >
+        AND `amount` = #{condition.amount}
+	  </if>
+	  <if test="condition.currency != null" >
+        AND `currency` = #{condition.currency}
+	  </if>
+	  <if test="condition.feeRate != null" >
+        AND `fee_rate` = #{condition.feeRate}
+	  </if>
+	  <if test="condition.walletAddress != null" >
+        AND `wallet_address` = #{condition.walletAddress}
+	  </if>
+	  <if test="condition.clientIdentifier != null" >
+        AND `client_identifier` = #{condition.clientIdentifier}
+	  </if>
+	  <if test="condition.clientSecret != null" >
+        AND `client_secret` = #{condition.clientSecret}
+	  </if>
+	  <if test="condition.webhookSecret != null" >
+        AND `webhook_secret` = #{condition.webhookSecret}
+	  </if>
+	  <if test="condition.webhookUrl != null" >
+        AND `webhook_url` = #{condition.webhookUrl}
+	  </if>
+	  <if test="condition.oauthIdentifier != null" >
+        AND `oauth_identifier` = #{condition.oauthIdentifier}
+	  </if>
+	  <if test="condition.oauthRedirectUrl != null" >
+        AND `oauth_redirect_url` = #{condition.oauthRedirectUrl}
+	  </if>
+	  <if test="condition.paltMessage != null" >
+        AND `palt_message` = #{condition.paltMessage}
+	  </if>
+	  </if>
+	  <if test="vo != null and !vo.expressionChainList.empty">
+        AND
+        <foreach collection="vo.expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <if test="expressionChainList != null and !expressionChainList.empty">
+        AND
+        <foreach collection="expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <include refid="map_params_where_condition_ext" />
+    </trim>
+  </sql>
+  <select id="getList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM `bc_platform`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+    <if test="pageBeginIndex != null and pageSize != null" >
+      LIMIT #{pageBeginIndex},#{pageSize}
+    </if>
+    <if test="pageBeginIndex == null and pageSize != null" >
+      LIMIT #{pageSize}
+    </if>
+    <if test="pageBeginIndex != null and pageSize == null" >
+      LIMIT #{pageBeginIndex}
+    </if>
+  </select>
+  <delete id="delete" parameterType="java.util.Map" >
+    DELETE
+    FROM `bc_platform`
+    <include refid="map_params_where_condition" />
+  </delete>
+  <select id="getCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    SELECT COUNT(1)
+    FROM `bc_platform`
+    <include refid="map_params_where_condition" />
+  </select>
+</mapper>

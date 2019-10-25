@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.BlackListMapper" >
+  <resultMap id="associationMap" type="com.yinmimoney.web.p2pnew.pojo.BlackList" >
+    
+  </resultMap>
+  <sql id="map_params_where_condition_ext" >
+	<if test="extConditions != null">
+		<!-- 扩展条件 -->
+	</if>
+  </sql>
+
+    <select id="getBlackPermissions" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT bp.nid nid,bp.name name,bl.is_valid isValid FROM black_permissions bp LEFT JOIN black_list bl ON
+        bp.nid=bl.permissions_nid AND bl.user_code=#{userCode}
+    </select>
+</mapper>

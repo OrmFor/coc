@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.OrderMapper" >
+  <resultMap id="associationMap" type="com.yinmimoney.web.p2pnew.pojo.Order" >
+    
+  </resultMap>
+    <resultMap id="newTransactionPriceCity" type="com.yinmimoney.web.p2pnew.dto.NewCityPriceDto">
+        <result column="city_code" property="cityCode" />
+        <result column="amount" property="amount" />
+        <result column="create_time" property="createTime" />
+        <result column="currency" property="currency" />
+
+    </resultMap>
+
+    <resultMap id="maxTransactionPriceCity" type="com.yinmimoney.web.p2pnew.responsebody.CityMaxTransactionPriceResponseBody">
+        <result column="city_name" property="cityName" />
+        <result column="amount" property="amount" />
+        <result column="currency" property="currency" />
+
+    </resultMap>
+  <sql id="map_params_where_condition_ext" >
+	<if test="extConditions != null">
+		<!-- 扩展条件 -->
+	</if>
+  </sql>
+
+    <select id="selectByOrderNoForUpdate" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM `bc_order`
+        WHERE `id` = #{id}
+        FOR UPDATE
+    </select>
+
+
+    <select id="getNewTransactionPriceCity1"  resultMap="newTransactionPriceCity">
+
+
+SELECT `city_code`,
+(select amount from bc_order a where a.city_code =  aa.city_code and a.status in(3,2) ORDER BY create_time desc LIMIT 1) amount,
+max(`create_time`) create_time,`currency`
+ FROM `bc_order` aa
+ WHERE `status` in ( 3,2)
+ group by `city_code`
+ order by create_time desc
+ limit #{beginIndex},#{pageSize};
+
+    </select>
+
+
+
+    <select id="getNewTransactionPriceCity"  resultMap="newTransactionPriceCity">
+
+SELECT `city_code`,
+ amount,
+`create_time`,`currency`
+ FROM `bc_order`
+ WHERE `status` in ( 3,2)
+ order by create_time desc
+ limit #{beginIndex},#{pageSize};
+
+    </select>
+
+
+    <select id="getCityMaxTransactionPrice" resultMap="maxTransactionPriceCity">
+        select amount,currency,city_name from (
+  SELECT
+          b.id, max(amount) amount,`currency`,a.city_name
+        FROM bc_city a LEFT JOIN `bc_order` b
+        on a.city_code = b.city_code
+        WHERE `status` in ( 3,2)
+        group by b.`city_code`
+        order by amount desc,id asc
+        )t
+
+ limit #{beginIndex},#{pageSize};
+
+
+    </select>
+
+
+
+    <select id="getNewTransactionPriceCityOld"  resultMap="newTransactionPriceCity">
+
+
+SELECT `city_code`,
+(select amount from bc_order a where a.city_code =  aa.city_code and a.status in(3,2) ORDER BY create_time desc LIMIT 1) amount,
+max(`create_time`) create_time,`currency`
+ FROM `bc_order` aa
+ WHERE `status` in ( 3,2)
+ group by `city_code`
+ order by create_time desc
+ limit 0,8;
+
+    </select>
+
+    <select id="getCityMaxTransactionPriceOld" resultMap="maxTransactionPriceCity">
+        select amount,currency,city_name from (
+  SELECT
+          b.id, max(amount) amount,`currency`,a.city_name
+        FROM bc_city a LEFT JOIN `bc_order` b
+        on a.city_code = b.city_code
+        WHERE `status` in ( 3,2)
+        group by b.`city_code`
+        order by amount desc,id asc
+        )t
+
+        limit 0,8;
+
+
+    </select>
+</mapper>

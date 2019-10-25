@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.OrderDetailMapper" >
+  <resultMap id="associationMap" type="com.yinmimoney.web.p2pnew.pojo.OrderDetail" >
+    
+  </resultMap>
+    <resultMap id="getSumAmountResult" type="com.yinmimoney.web.p2pnew.dto.SumMoneyDto">
+        <result column="money_in" property="moneySumIn" />
+        <result column="money_out" property="moneySumOut" />
+    </resultMap>
+
+    <resultMap id="getOrderAmountResult" type="com.yinmimoney.web.p2pnew.dto.OrderAmountDto">
+        <result column="money_in" property="orderAmountIn" />
+        <result column="money_out" property="orderAmountOut" />
+    </resultMap>
+
+    <resultMap id="getDataLookInfosMap" type="com.yinmimoney.web.p2pnew.dto.DataLookInfo" extends="associationMap">
+        <result property="item" column="item"/>
+        <result property="name" column="name"/>
+        <result property="number" column="number"/>
+    </resultMap>
+
+    <resultMap id="platformIncomeInfoMap" type="com.yinmimoney.web.p2pnew.dto.PlatformIncomeInfo" extends="associationMap">
+        <result property="time" column="time"/>
+        <result property="income" column="income"/>
+    </resultMap>
+
+    <sql id="map_params_where_condition_ext" >
+	<if test="extConditions != null">
+		<!-- 扩展条件 -->
+	</if>
+  </sql>
+
+
+    <select id="getSumAmount" resultMap="getSumAmountResult" parameterType="java.lang.String">
+        select
+        ( select sum(amount)  from
+            `bc_order_detail`
+            <where>
+                type = 'IN'
+                <if test="userCode !=null">
+                  and  user_code = #{userCode}
+                </if>
+            </where>
+            ) as money_in ,
+           ( select sum(amount)  from
+            `bc_order_detail`
+            <where>
+                type = 'OUT'
+                <if test="userCode !=null">
+                    and   user_code = #{userCode}
+                </if>
+            </where>
+            ) as money_out
+        from dual
+    </select>
+
+    <select id="getOrderAmount" resultMap="getOrderAmountResult" parameterType="java.lang.String">
+        select
+        ( select IFNULL(sum(amount),0)  from
+        `bc_order_detail`
+        <where>
+            type = 'IN'
+            <if test="userCode !=null">
+                and  user_code = #{userCode}
+            </if>
+        </where>
+        ) as money_in ,
+        ( select IFNULL(sum(amount),0)  from
+        `bc_order_detail`
+        <where>
+            type = 'OUT'
+            <if test="userCode !=null">
+                and   user_code = #{userCode}
+            </if>
+        </where>
+        ) as money_out
+        from dual
+    </select>
+
+    <select id="getDataLookInfos" resultMap="getDataLookInfosMap" parameterType="java.lang.String">
+        SELECT '今日交易城市个数' AS name,'total_trade' AS  item,count(1) AS number FROM  bc_order_detail WHERE type='OUT' AND TO_DAYS(create_time)=TO_DAYS(NOW())
+        UNION ALL
+       SELECT '今日交易金额' AS name,'total_trade' AS  item,sum(amount) AS number FROM  bc_order_detail WHERE type='IN' AND TO_DAYS(create_time)=TO_DAYS(NOW())
+        UNION ALL
+       SELECT '今日平台收益' AS name,'total_trade' AS  item,sum(amount) AS number FROM  bc_order_detail WHERE type='IN' AND user_code=#{platformCode} AND TO_DAYS(create_time)=TO_DAYS(NOW())
+    </select>
+    
+    <select id="getPlatformIncomeInfos" resultMap="platformIncomeInfoMap" parameterType="java.util.Map">
+        SELECT SUM(amount) as 'income',DATE_FORMAT(create_time,#{dateFormat}) as 'time'
+        FROM bc_order_detail
+        WHERE  date(create_time) <![CDATA[ >= ]]> date(#{startTime})
+        AND date(create_time) <![CDATA[ <= ]]> date(#{endTime})
+        AND type='IN'
+        AND user_code=#{platformCode}
+    GROUP BY DATE_FORMAT(create_time,#{dateFormat})
+    </select>
+
+
+</mapper>

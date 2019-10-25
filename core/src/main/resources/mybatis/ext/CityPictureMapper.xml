@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.CityPictureMapper" >
+  <resultMap id="associationMap" type="com.yinmimoney.web.p2pnew.pojo.CityPicture" >
+    
+  </resultMap>
+  <sql id="map_params_where_condition_ext" >
+	<if test="extConditions != null">
+		<!-- 扩展条件 -->
+	</if>
+  </sql>
+
+    <resultMap id="getHotPictureResult" type="com.yinmimoney.web.p2pnew.dto.CityPictureDto">
+        <result column="picture_code" property="pictureCode" />
+        <result column="txid" property="txid" />
+        <result column="city_code" property="cityCode" />
+
+        <result column="user_code" property="pictureUserCode" />
+        <result column="like_number" property="likeNum" />
+        <result column="create_time" property="createTime" />
+        <result column="city_name" property="cityName" />
+
+    </resultMap>
+
+    <select id="getHotPicture" resultMap="getHotPictureResult">
+
+        select picture_code,txid,city_code,user_code,like_number,city_name,create_time
+        from bc_city_picture a LEFT JOIN (
+        select count(*) count,chat_code from like_log a
+        <where>
+
+         a.city_code = #{cityCode} and
+
+         date(add_time) &lt;= #{endTime}
+        and date(add_time) &gt;= #{startTime}
+        and a.chat_code like 'p_%'
+        </where>
+        group by chat_code
+
+        ) t on a.picture_code = t.chat_code
+        where a.city_code = #{cityCode}
+        and a.is_show =1
+        ORDER BY count desc
+        limit #{beginIndex},#{pageSize}
+    </select>
+
+
+    <select id="getHotPictureCount" resultType="java.lang.Integer">
+        select count(*)  from bc_city_picture a LEFT JOIN (
+        select count(*) count,chat_code from like_log a
+        <where>
+                a.city_code = #{cityCode} and
+
+            date(add_time) &lt;= #{endTime}
+            and date(add_time) &gt;= #{startTime}
+            and a.chat_code like 'p_%'
+        </where>
+        group by chat_code
+
+        ) t on a.picture_code = t.chat_code
+        where a.city_code = #{cityCode}
+        and a.is_show =1
+    </select>
+
+
+    <select id="getHotPictureAll" resultMap="getHotPictureResult">
+        select picture_code,txid,city_code,user_code,like_number,city_name from bc_city_picture a LEFT JOIN (
+        select count(*) count,chat_code from like_log a
+        <where>
+
+            date(add_time) &lt;= #{endTime}
+            and date(add_time) &gt;= #{startTime}
+            and a.chat_code like 'p_%'
+        </where>
+        group by chat_code
+
+        ) t on a.picture_code = t.chat_code
+        where  a.is_show =1
+        ORDER BY count desc
+        limit #{beginIndex},#{pageSize}
+
+    </select>
+
+    <select id="getHotPictureAllCount" resultType="java.lang.Integer">
+        select count(*) from bc_city_picture a LEFT JOIN (
+        select count(*) count,chat_code from like_log a
+        <where>
+
+            date(add_time) &lt;= #{endTime}
+            and date(add_time) &gt;= #{startTime}
+            and a.chat_code like 'p_%'
+        </where>
+        group by chat_code
+
+        ) t on a.picture_code = t.chat_code
+        where  a.is_show =1
+
+    </select>
+
+</mapper>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>维护 - 参数列表 - 系统后台</title>
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<#include "/admin/include/cssjs_up.html" encoding="UTF-8"/>
+	</head>
+
+	<body>
+		<#assign adminMenuPosFlag="sConfig">
+		<#include "/admin/include/head.html" encoding="UTF-8"/>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+			<div class="main-container-inner">
+				<a class="menu-toggler" id="menu-toggler" href="#">
+					<span class="menu-text"></span>
+				</a>
+				<#include "/admin/include/menu.html" encoding="UTF-8"/>
+				<div class="main-content">
+					<div class="breadcrumbs" id="breadcrumbs">
+						<script type="text/javascript">
+							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+						</script>
+
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home home-icon"></i>
+								<a href="/admin/">首页</a>
+							</li>
+							<li>
+								<a href="/admin/sConfig/list/">参数列表</a>
+							</li>
+							<li class="active">维护</li>
+						</ul><!-- .breadcrumb -->
+					</div>
+
+					<div class="page-content">
+						<div class="row">
+							<div class="col-xs-12">
+								<form role="form" class="form-horizontal" method="post">
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right"> 名称: </label>
+										<div class="col-sm-9">
+                      <input type="text" class="form-control" name="name" placeholder="请输入名称"  value="${bean.name}">
+										</div>
+									</div>
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right"> 标识: </label>
+										<div class="col-sm-9">
+                      <input type="text" class="form-control" name="nid" placeholder="请输入标识"  value="${bean.nid}">
+										</div>
+									</div>
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right"> 名称对应的值: </label>
+										<div class="col-sm-9">
+                      <input type="text" class="form-control" name="value" placeholder="请输入名称对应的值"  value="${bean.value}">
+										</div>
+									</div>
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right"> 状态: </label>
+										<div class="col-sm-9">
+                      <select class="form-control" name="status">
+                        <option value="0" ${(bean.status == 0)?string("selected","")}>禁用</option>
+                        <option value="1" ${(bean.status == 1)?string("selected","")}>启用</option>
+                      </select>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right"> 备注: </label>
+										<div class="col-sm-9">
+                      <input type="text" class="form-control" name="remark" placeholder="请输入备注"  value="${bean.remark}">
+										</div>
+									</div>
+									<div class="space-4"></div>
+									<div class="clearfix form-actions">
+										<div class="text-center">
+											<button type="submit" class="btn btn-info">
+												<i class="icon-ok bigger-110"></i>
+												提交
+											</button>
+											<input type="hidden" name="id" value="${bean.id}" />
+											<input type="hidden" name="token" value="${token}" />
+											&nbsp; &nbsp; &nbsp;
+											<button type="reset" class="btn">
+												<i class="icon-undo bigger-110"></i>
+												重填
+											</button>
+										</div>
+									</div>
+								</form>
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+			</div><!-- /.main-container-inner -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="icon-double-angle-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+		<#include "/admin/include/cssjs_down.html" encoding="UTF-8"/>
+    <script src="/assets/js/jquery.validate.min.js"></script>
+    <script>
+    //required email url date dateISO number digits creditcard minlength maxlength rangelength
+    //min max range step equalTo remote
+    $('form').validate({
+      errorElement: 'span',
+      errorClass: 'help-block',
+      rules: {
+        name: {
+          required: true
+        }
+        ,nid: {
+          required: true
+        }
+        ,value: {
+            required: true
+        }
+        ,status: {
+          required: true
+          ,digits: true
+        }
+        ,remark: {
+        }
+      },
+      messages: {
+        name: {
+          required: "请输入名称"
+        }
+        ,nid: {
+          required: "请输入标识"
+        }
+        ,value: {
+            required: "请输入名称对应的值"
+        }
+        ,status: {
+          required: "请输入状态"
+          ,digits: "状态启用必须为数字"
+        }
+        ,remark: {
+        }
+      },
+  
+      invalidHandler: function (event, validator) {
+        //display error alert on form submit  
+      },
+  
+      highlight: function (e) {
+        $(e).closest('.form-group').addClass('has-error');
+      },
+  
+      success: function (e) {
+        $(e).closest('.form-group').removeClass('has-error');
+        $(e).remove();
+      },
+  
+      errorPlacement: function (error, element) {
+        //错误信息放置位置
+        error.insertAfter(element);
+      },
+  
+      submitHandler: function (form) {//验证通过
+        checkFormMan(form);
+      },
+      invalidHandler: function (form, validator) {
+        //表单验证失败调用
+      }
+    });
+		function checkFormMan(obj){
+			$.post("/admin/sConfig/save",$(obj).serialize(),function(a){
+				if(a.code == 0){
+					location.href="/admin/sConfig/list/";
+				}else{
+					alert("保存失败" + a.msg);
+				}
+			});
+			return false;
+		}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.CityAdsPriceMapper" >
+  <resultMap id="BaseResultMap" type="com.yinmimoney.web.p2pnew.pojo.CityAdsPrice" extends="associationMap">
+	<id column="id" property="id" />
+	<result column="order_no" property="orderNo" />
+	<result column="txid" property="txid" />
+	<result column="unit_price" property="unitPrice" />
+	<result column="unit" property="unit" />
+	<result column="time" property="time" />
+	<result column="amount" property="amount" />
+	<result column="city_code" property="cityCode" />
+	<result column="city_name" property="cityName" />
+	<result column="user_code" property="userCode" />
+	<result column="create_time" property="createTime" />
+	<result column="expire_time" property="expireTime" />
+	<result column="is_expire" property="isExpire" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+		`id`
+		,`order_no`
+		,`txid`
+		,`unit_price`
+		,`unit`
+		,`time`
+		,`amount`
+		,`city_code`
+		,`city_name`
+		,`user_code`
+		,`create_time`
+		,`expire_time`
+		,`is_expire`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `bc_city_ads_price`
+    WHERE `id` = #{id}
+  </select>
+  <select id="getByCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `bc_city_ads_price`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+	LIMIT 1
+  </select>
+  <select id="aggregate" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT ${aggregate_sql} FROM `bc_city_ads_price`
+    <include refid="map_params_where_condition" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    DELETE FROM `bc_city_ads_price`
+    WHERE `id` = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.yinmimoney.web.p2pnew.pojo.CityAdsPrice" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `bc_city_ads_price` (
+	  `order_no`
+	  ,`txid`
+	  ,`unit_price`
+	  ,`unit`
+	  ,`time`
+	  ,`amount`
+	  ,`city_code`
+	  ,`city_name`
+	  ,`user_code`
+	  ,`create_time`
+	  ,`expire_time`
+	  ,`is_expire`
+      )
+    VALUES (
+		  
+		  #{orderNo}
+		  ,
+		  #{txid}
+		  ,
+		  #{unitPrice}
+		  ,
+		  #{unit}
+		  ,
+		  #{time}
+		  ,
+		  #{amount}
+		  ,
+		  #{cityCode}
+		  ,
+		  #{cityName}
+		  ,
+		  #{userCode}
+		  ,
+		  <if test="createTime != null" >
+			#{createTime}
+      </if>
+      <if test="createTime == null" >
+      NOW()
+		  </if>
+		  ,
+		  <if test="expireTime != null" >
+			#{expireTime}
+      </if>
+      <if test="expireTime == null" >
+      NOW()
+		  </if>
+		  ,
+		  #{isExpire}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yinmimoney.web.p2pnew.pojo.CityAdsPrice" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `bc_city_ads_price`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+		  <if test="orderNo != null" >
+			`order_no`,
+		  </if>
+		  <if test="txid != null" >
+			`txid`,
+		  </if>
+		  <if test="unitPrice != null" >
+			`unit_price`,
+		  </if>
+		  <if test="unit != null" >
+			`unit`,
+		  </if>
+		  <if test="time != null" >
+			`time`,
+		  </if>
+		  <if test="amount != null" >
+			`amount`,
+		  </if>
+		  <if test="cityCode != null" >
+			`city_code`,
+		  </if>
+		  <if test="cityName != null" >
+			`city_name`,
+		  </if>
+		  <if test="userCode != null" >
+			`user_code`,
+		  </if>
+			`create_time`,
+			`expire_time`,
+		  <if test="isExpire != null" >
+			`is_expire`,
+		  </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+		  <if test="orderNo != null" >
+			#{orderNo},
+		  </if>
+		  <if test="txid != null" >
+			#{txid},
+		  </if>
+		  <if test="unitPrice != null" >
+			#{unitPrice},
+		  </if>
+		  <if test="unit != null" >
+			#{unit},
+		  </if>
+		  <if test="time != null" >
+			#{time},
+		  </if>
+		  <if test="amount != null" >
+			#{amount},
+		  </if>
+		  <if test="cityCode != null" >
+			#{cityCode},
+		  </if>
+		  <if test="cityName != null" >
+			#{cityName},
+		  </if>
+		  <if test="userCode != null" >
+			#{userCode},
+		  </if>
+		  <if test="createTime != null" >
+			#{createTime},
+      </if>
+      <if test="createTime == null" >
+      NOW(),
+		  </if>
+		  <if test="expireTime != null" >
+			#{expireTime},
+      </if>
+      <if test="expireTime == null" >
+      NOW(),
+		  </if>
+		  <if test="isExpire != null" >
+			#{isExpire},
+		  </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yinmimoney.web.p2pnew.pojo.CityAdsPrice" >
+    UPDATE `bc_city_ads_price`
+    <set >
+	  <if test="orderNo != null" >
+        `order_no` = #{orderNo},
+      </if>
+	  <if test="txid != null" >
+        `txid` = #{txid},
+      </if>
+	  <if test="unitPrice != null" >
+        `unit_price` = #{unitPrice},
+      </if>
+	  <if test="unit != null" >
+        `unit` = #{unit},
+      </if>
+	  <if test="time != null" >
+        `time` = #{time},
+      </if>
+	  <if test="amount != null" >
+        `amount` = #{amount},
+      </if>
+	  <if test="cityCode != null" >
+        `city_code` = #{cityCode},
+      </if>
+	  <if test="cityName != null" >
+        `city_name` = #{cityName},
+      </if>
+	  <if test="userCode != null" >
+        `user_code` = #{userCode},
+      </if>
+	  <if test="createTime != null" >
+        `create_time` = #{createTime},
+      </if>
+	  <if test="expireTime != null" >
+        `expire_time` = #{expireTime},
+      </if>
+	  <if test="isExpire != null" >
+        `is_expire` = #{isExpire},
+      </if>
+    </set>
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yinmimoney.web.p2pnew.pojo.CityAdsPrice" >
+	UPDATE `bc_city_ads_price` SET
+        `order_no` = #{orderNo},
+        `txid` = #{txid},
+        `unit_price` = #{unitPrice},
+        `unit` = #{unit},
+        `time` = #{time},
+        `amount` = #{amount},
+        `city_code` = #{cityCode},
+        `city_name` = #{cityName},
+        `user_code` = #{userCode},
+        `create_time` = #{createTime},
+        `expire_time` = #{expireTime},
+        `is_expire` = #{isExpire}
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByCondition" parameterType="java.util.Map" >
+    UPDATE `bc_city_ads_price`
+    <set>
+	  <if test="entity.orderNo != null" >
+        `order_no` = #{entity.orderNo},
+      </if>
+	  <if test="entity.txid != null" >
+        `txid` = #{entity.txid},
+      </if>
+	  <if test="entity.unitPrice != null" >
+        `unit_price` = #{entity.unitPrice},
+      </if>
+	  <if test="entity.unit != null" >
+        `unit` = #{entity.unit},
+      </if>
+	  <if test="entity.time != null" >
+        `time` = #{entity.time},
+      </if>
+	  <if test="entity.amount != null" >
+        `amount` = #{entity.amount},
+      </if>
+	  <if test="entity.cityCode != null" >
+        `city_code` = #{entity.cityCode},
+      </if>
+	  <if test="entity.cityName != null" >
+        `city_name` = #{entity.cityName},
+      </if>
+	  <if test="entity.userCode != null" >
+        `user_code` = #{entity.userCode},
+      </if>
+	  <if test="entity.createTime != null" >
+        `create_time` = #{entity.createTime},
+      </if>
+	  <if test="entity.expireTime != null" >
+        `expire_time` = #{entity.expireTime},
+      </if>
+	  <if test="entity.isExpire != null" >
+        `is_expire` = #{entity.isExpire},
+      </if>
+      <foreach collection="entity.nullColums" item="nullColum">
+        `${nullColum}` = NULL,
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <update id="updateIncreateNumbers" parameterType="java.util.Map" >
+    UPDATE `bc_city_ads_price`
+    <set>
+      <foreach collection="increateNumbers" item="numberCloums">
+        `${numberCloums.column}` = `${numberCloums.column}` + #{numberCloums.number},
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <sql id="map_params_where_condition" >
+    <trim prefix="WHERE" prefixOverrides="AND">
+	  <if test="id != null" >
+        AND `id` = #{id}
+	  </if>
+	  <if test="orderNo != null" >
+        AND `order_no` = #{orderNo}
+	  </if>
+	  <if test="txid != null" >
+        AND `txid` = #{txid}
+	  </if>
+	  <if test="unitPrice != null" >
+        AND `unit_price` = #{unitPrice}
+	  </if>
+	  <if test="unit != null" >
+        AND `unit` = #{unit}
+	  </if>
+	  <if test="time != null" >
+        AND `time` = #{time}
+	  </if>
+	  <if test="amount != null" >
+        AND `amount` = #{amount}
+	  </if>
+	  <if test="cityCode != null" >
+        AND `city_code` = #{cityCode}
+	  </if>
+	  <if test="cityName != null" >
+        AND `city_name` = #{cityName}
+	  </if>
+	  <if test="userCode != null" >
+        AND `user_code` = #{userCode}
+	  </if>
+	  <if test="createTime != null" >
+        AND `create_time` = #{createTime}
+	  </if>
+	  <if test="expireTime != null" >
+        AND `expire_time` = #{expireTime}
+	  </if>
+	  <if test="isExpire != null" >
+        AND `is_expire` = #{isExpire}
+	  </if>
+	  <if test="condition != null">
+	  <if test="condition.id != null" >
+        AND `id` = #{condition.id}
+	  </if>
+	  <if test="condition.orderNo != null" >
+        AND `order_no` = #{condition.orderNo}
+	  </if>
+	  <if test="condition.txid != null" >
+        AND `txid` = #{condition.txid}
+	  </if>
+	  <if test="condition.unitPrice != null" >
+        AND `unit_price` = #{condition.unitPrice}
+	  </if>
+	  <if test="condition.unit != null" >
+        AND `unit` = #{condition.unit}
+	  </if>
+	  <if test="condition.time != null" >
+        AND `time` = #{condition.time}
+	  </if>
+	  <if test="condition.amount != null" >
+        AND `amount` = #{condition.amount}
+	  </if>
+	  <if test="condition.cityCode != null" >
+        AND `city_code` = #{condition.cityCode}
+	  </if>
+	  <if test="condition.cityName != null" >
+        AND `city_name` = #{condition.cityName}
+	  </if>
+	  <if test="condition.userCode != null" >
+        AND `user_code` = #{condition.userCode}
+	  </if>
+	  <if test="condition.createTime != null" >
+        AND `create_time` = #{condition.createTime}
+	  </if>
+	  <if test="condition.expireTime != null" >
+        AND `expire_time` = #{condition.expireTime}
+	  </if>
+	  <if test="condition.isExpire != null" >
+        AND `is_expire` = #{condition.isExpire}
+	  </if>
+	  </if>
+	  <if test="vo != null and !vo.expressionChainList.empty">
+        AND
+        <foreach collection="vo.expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <if test="expressionChainList != null and !expressionChainList.empty">
+        AND
+        <foreach collection="expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <include refid="map_params_where_condition_ext" />
+    </trim>
+  </sql>
+  <select id="getList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM `bc_city_ads_price`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+    <if test="pageBeginIndex != null and pageSize != null" >
+      LIMIT #{pageBeginIndex},#{pageSize}
+    </if>
+    <if test="pageBeginIndex == null and pageSize != null" >
+      LIMIT #{pageSize}
+    </if>
+    <if test="pageBeginIndex != null and pageSize == null" >
+      LIMIT #{pageBeginIndex}
+    </if>
+  </select>
+  <delete id="delete" parameterType="java.util.Map" >
+    DELETE
+    FROM `bc_city_ads_price`
+    <include refid="map_params_where_condition" />
+  </delete>
+  <select id="getCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    SELECT COUNT(1)
+    FROM `bc_city_ads_price`
+    <include refid="map_params_where_condition" />
+  </select>
+</mapper>

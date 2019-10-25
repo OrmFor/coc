@@ -1,0 +1,50 @@
+<div class="sidebar" id="sidebar">
+	<script type="text/javascript">
+		try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+	</script>
+
+	<ul class="nav nav-list">
+    <#list ownerAdminActions as first>
+    <#if first.level == 1>
+    <#if first.url?? && first.url != "">
+    <li ${(adminMenuPosFlag=="${first.menuPosStr}")?string("class='active'","")}>
+    <#else>
+    <li>
+    </#if>
+			<#if first.url?? && first.url != "">
+      <a href="${first.url}">
+				<i class="${first.icon}"></i>
+				<span class="menu-text"> ${first.name} </span>
+			</a>
+      <#else>
+      <a href="#" class="dropdown-toggle">
+				<i class="${first.icon}"></i>
+				<span class="menu-text"> ${first.name} </span>
+				<b class="arrow icon-angle-down"></b>
+			</a>
+      <ul class="submenu">
+      <#list ownerAdminActions as second>
+      <#if second.pid == first.id>
+        <li ${(adminMenuPosFlag=="${second.menuPosStr}")?string("class='active'","")}>
+					<a href="${second.url}">
+						<i class="icon-fighter-jet"></i>
+						<span class="menu-text"> ${second.name} </span>
+					</a>
+				</li>
+      </#if>
+      </#list>
+      </ul>
+      </#if>
+		</li>
+    </#if>
+    </#list>
+	</ul><!-- /.nav-list -->
+
+	<div class="sidebar-collapse" id="sidebar-collapse">
+		<i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+	</div>
+
+	<script type="text/javascript">
+		try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+	</script>
+</div>

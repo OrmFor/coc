@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+	http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.2.xsd
+	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
+    
+	<task:scheduler id="taskScheduler" pool-size="100"/>
+	
+    <context:component-scan base-package="com.yinmimoney.web.p2pnew.controller" />
+	<context:component-scan base-package="cc.s2m.web.utils.webUtils.init" />
+	<context:component-scan base-package="com.yinmimoney.web.p2pnew.task" />
+	
+    <mvc:annotation-driven>
+		<mvc:async-support default-timeout="10000"/>
+        <mvc:message-converters>
+          <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+          		<property name="features">
+					<list>
+                        <value>WriteMapNullValue</value>
+						<!--<value>WriteDateUseDateFormat</value>-->
+                    </list>
+                </property>
+		  </bean>
+        </mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<mvc:resources mapping="/*.html" location="/" />
+	<mvc:resources mapping="/favicon.ico" location="/" />
+	<mvc:resources mapping="/images/**" location="/images/" />
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/fonts/**" location="/fonts/" />
+	<mvc:resources mapping="/umeditor/**" location="/umeditor/" />
+	<mvc:resources mapping="/assets/**" location="/assets/" />
+	<mvc:resources mapping="/pdfTmp/**" location="/pdfTmp/" />
+	
+	<mvc:interceptors>
+        <bean class="cc.s2m.web.utils.webUtils.interceptors.BaseInterceptor" />
+        <!--<mvc:interceptor>
+	      <mvc:mapping path="/api/1.0/**" />
+	      <mvc:exclude-mapping path="/api/1.0"/>
+	      <bean class="com.yinmimoney.web.p2pnew.interceptors.UrlInterceptor" />
+	    </mvc:interceptor>-->
+        <!--<mvc:interceptor>
+	      <mvc:mapping path="/api/1.0/**" />
+	      <mvc:exclude-mapping path="/api/1.0"/>
+	      <bean class="com.yinmimoney.web.p2pnew.interceptors.VersionInterceptor" />
+	    </mvc:interceptor>-->
+        <mvc:interceptor>
+	      <mvc:mapping path="/api/1.0/**" />
+	      <mvc:exclude-mapping path="/api/1.0"/>
+		  <mvc:exclude-mapping path="/api/1.0/register"/>
+			<mvc:exclude-mapping path="/api/1.0/login"/>
+			<mvc:exclude-mapping path="/api/1.0/sendMailToResetPwd"/>
+			<mvc:exclude-mapping path="/api/1.0/resetPwd"/>
+			<mvc:exclude-mapping path="/api/1.0/processMoneyButtonOauth"/>
+			<mvc:exclude-mapping path="/api/1.0/ownCity/userInfo"/>
+			<mvc:exclude-mapping path="/api/1.0/getCityAdsPriceList"/>
+			<mvc:exclude-mapping path="/api/1.0/cityPictureOpenLog/isAbility/addPicture"/>
+			<bean class="com.yinmimoney.web.p2pnew.interceptors.TokenInterceptor">
+				<property name="canNoLoginUrls">
+					<list>
+						<!-- 可以不需要登录的链接，但是登录情况下又需要过token，保存用户信息 -->
+						<value>/api/1.0/cityOnChat/list</value>
+						<value>/api/1.0/cityOnChat/city/ads/picture</value>
+						<value>/api/1.0/getCityPicture</value>
+						<value>/api/1.0/getHotPicture</value>
+						<value>/api/1.0/getHotPictureAll</value>
+						<value>/api/1.0/getCityPictureAll</value>
+
+					</list>
+				</property>
+		  </bean>
+	    </mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/api/1.0/**" />
+			<mvc:exclude-mapping path="/api/1.0"/>
+			<mvc:exclude-mapping path="/api/1.0/register"/>
+			<mvc:exclude-mapping path="/api/1.0/login"/>
+			<mvc:exclude-mapping path="/api/1.0/sendMailToResetPwd"/>
+			<mvc:exclude-mapping path="/api/1.0/processMoneyButtonOauth"/>
+			<mvc:exclude-mapping path="/api/1.0/ownCity/userInfo"/>
+			<mvc:exclude-mapping path="/api/1.0/getCityAdsPriceList"/>
+			<mvc:exclude-mapping path="/api/1.0/cityPictureOpenLog/isAbility/addPicture"/>
+			<bean class="com.yinmimoney.web.p2pnew.interceptors.OauthInterceptor">
+				<property name="canNoLoginUrls">
+					<list>
+						<!-- 可以不需要登录的链接，但是登录情况下又需要过token，保存用户信息 -->
+						<value>/api/1.0/cityOnChat/list</value>
+						<value>/api/1.0/cityOnChat/city/ads/picture</value>
+						<value>/api/1.0/getCityPicture</value>
+						<value>/api/1.0/getHotPicture</value>
+						<value>/api/1.0/getHotPictureAll</value>
+						<value>/api/1.0/getCityPictureAll</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- <property name="maxUploadSize" value="100000"/> -->
+	</bean>
+	
+	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/views/"/>
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="defaultEncoding">UTF-8</prop>
+				<prop key="url_escaping_charset">UTF-8</prop>
+				<prop key="locale">zh_CN</prop>
+				<prop key="localized_lookup">false</prop>
+				<prop key="classic_compatible">true</prop>
+                <prop key="number_format">0.######</prop>
+                <prop key="template_exception_handler">cc.s2m.web.utils.webUtils.freemarker.ExceptionHandler</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <prop key="time_format">HH:mm:ss</prop>
+				<!-- <prop key="template_update_delay">1</prop> -->
+				<!-- <prop key="boolean_format">true,false</prop> -->
+				<!-- <prop key="whitespace_stripping">true</prop> -->
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="contentType" value="text/html;charset=UTF-8"/>
+		<property name="cache" value="true"/>
+		<property name="prefix" value="" />
+		<property name="suffix" value=".html" />
+	</bean>
+
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+		<!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
+		<property name="validationMessageSource" ref="messageSource"/>
+	</bean>
+
+	<!-- 国际化的消息资源文件（本系统中主要用于显示/错误消息定制） -->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<!-- 在web环境中一定要定位到classpath 否则默认到当前web应用下找  -->
+				<value>classpath:ValidationMessages_zh_CN.properties</value>
+				<!-- <value>classpath:*.properties</value> -->
+			</list>
+		</property>
+		<property name="useCodeAsDefaultMessage" value="false"/>
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="cacheSeconds" value="60"/>
+	</bean>
+
+</beans>  

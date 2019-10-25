@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.CityPictureMapper" >
+  <resultMap id="BaseResultMap" type="com.yinmimoney.web.p2pnew.pojo.CityPicture" extends="associationMap">
+	<id column="id" property="id" />
+	<result column="picture_code" property="pictureCode" />
+	<result column="order_no" property="orderNo" />
+	<result column="txid" property="txid" />
+	<result column="city_code" property="cityCode" />
+	<result column="user_code" property="userCode" />
+	<result column="like_number" property="likeNumber" />
+	<result column="create_time" property="createTime" />
+	<result column="city_name" property="cityName" />
+	<result column="is_show" property="isShow" />
+	<result column="version" property="version" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+		`id`
+		,`picture_code`
+		,`order_no`
+		,`txid`
+		,`city_code`
+		,`user_code`
+		,`like_number`
+		,`create_time`
+		,`city_name`
+		,`is_show`
+		,`version`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `bc_city_picture`
+    WHERE `id` = #{id}
+  </select>
+  <select id="getByCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `bc_city_picture`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+	LIMIT 1
+  </select>
+  <select id="aggregate" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT ${aggregate_sql} FROM `bc_city_picture`
+    <include refid="map_params_where_condition" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    DELETE FROM `bc_city_picture`
+    WHERE `id` = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.yinmimoney.web.p2pnew.pojo.CityPicture" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `bc_city_picture` (
+	  `picture_code`
+	  ,`order_no`
+	  ,`txid`
+	  ,`city_code`
+	  ,`user_code`
+	  ,`like_number`
+	  ,`create_time`
+	  ,`city_name`
+	  ,`is_show`
+	  ,`version`
+      )
+    VALUES (
+		  
+		  #{pictureCode}
+		  ,
+		  #{orderNo}
+		  ,
+		  #{txid}
+		  ,
+		  #{cityCode}
+		  ,
+		  #{userCode}
+		  ,
+		  #{likeNumber}
+		  ,
+		  <if test="createTime != null" >
+			#{createTime}
+      </if>
+      <if test="createTime == null" >
+      NOW()
+		  </if>
+		  ,
+		  #{cityName}
+		  ,
+		  #{isShow}
+		  ,
+		  #{version}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yinmimoney.web.p2pnew.pojo.CityPicture" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `bc_city_picture`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+		  <if test="pictureCode != null" >
+			`picture_code`,
+		  </if>
+		  <if test="orderNo != null" >
+			`order_no`,
+		  </if>
+		  <if test="txid != null" >
+			`txid`,
+		  </if>
+		  <if test="cityCode != null" >
+			`city_code`,
+		  </if>
+		  <if test="userCode != null" >
+			`user_code`,
+		  </if>
+		  <if test="likeNumber != null" >
+			`like_number`,
+		  </if>
+			`create_time`,
+		  <if test="cityName != null" >
+			`city_name`,
+		  </if>
+		  <if test="isShow != null" >
+			`is_show`,
+		  </if>
+		  <if test="version != null" >
+			`version`,
+		  </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+		  <if test="pictureCode != null" >
+			#{pictureCode},
+		  </if>
+		  <if test="orderNo != null" >
+			#{orderNo},
+		  </if>
+		  <if test="txid != null" >
+			#{txid},
+		  </if>
+		  <if test="cityCode != null" >
+			#{cityCode},
+		  </if>
+		  <if test="userCode != null" >
+			#{userCode},
+		  </if>
+		  <if test="likeNumber != null" >
+			#{likeNumber},
+		  </if>
+		  <if test="createTime != null" >
+			#{createTime},
+      </if>
+      <if test="createTime == null" >
+      NOW(),
+		  </if>
+		  <if test="cityName != null" >
+			#{cityName},
+		  </if>
+		  <if test="isShow != null" >
+			#{isShow},
+		  </if>
+		  <if test="version != null" >
+			#{version},
+		  </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yinmimoney.web.p2pnew.pojo.CityPicture" >
+    UPDATE `bc_city_picture`
+    <set >
+	  <if test="pictureCode != null" >
+        `picture_code` = #{pictureCode},
+      </if>
+	  <if test="orderNo != null" >
+        `order_no` = #{orderNo},
+      </if>
+	  <if test="txid != null" >
+        `txid` = #{txid},
+      </if>
+	  <if test="cityCode != null" >
+        `city_code` = #{cityCode},
+      </if>
+	  <if test="userCode != null" >
+        `user_code` = #{userCode},
+      </if>
+	  <if test="likeNumber != null" >
+        `like_number` = #{likeNumber},
+      </if>
+	  <if test="createTime != null" >
+        `create_time` = #{createTime},
+      </if>
+	  <if test="cityName != null" >
+        `city_name` = #{cityName},
+      </if>
+	  <if test="isShow != null" >
+        `is_show` = #{isShow},
+      </if>
+	  <if test="version != null" >
+        `version` = #{version},
+      </if>
+    </set>
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yinmimoney.web.p2pnew.pojo.CityPicture" >
+	UPDATE `bc_city_picture` SET
+        `picture_code` = #{pictureCode},
+        `order_no` = #{orderNo},
+        `txid` = #{txid},
+        `city_code` = #{cityCode},
+        `user_code` = #{userCode},
+        `like_number` = #{likeNumber},
+        `create_time` = #{createTime},
+        `city_name` = #{cityName},
+        `is_show` = #{isShow},
+        `version` = #{version}
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByCondition" parameterType="java.util.Map" >
+    UPDATE `bc_city_picture`
+    <set>
+	  <if test="entity.pictureCode != null" >
+        `picture_code` = #{entity.pictureCode},
+      </if>
+	  <if test="entity.orderNo != null" >
+        `order_no` = #{entity.orderNo},
+      </if>
+	  <if test="entity.txid != null" >
+        `txid` = #{entity.txid},
+      </if>
+	  <if test="entity.cityCode != null" >
+        `city_code` = #{entity.cityCode},
+      </if>
+	  <if test="entity.userCode != null" >
+        `user_code` = #{entity.userCode},
+      </if>
+	  <if test="entity.likeNumber != null" >
+        `like_number` = #{entity.likeNumber},
+      </if>
+	  <if test="entity.createTime != null" >
+        `create_time` = #{entity.createTime},
+      </if>
+	  <if test="entity.cityName != null" >
+        `city_name` = #{entity.cityName},
+      </if>
+	  <if test="entity.isShow != null" >
+        `is_show` = #{entity.isShow},
+      </if>
+	  <if test="entity.version != null" >
+        `version` = #{entity.version},
+      </if>
+      <foreach collection="entity.nullColums" item="nullColum">
+        `${nullColum}` = NULL,
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <update id="updateIncreateNumbers" parameterType="java.util.Map" >
+    UPDATE `bc_city_picture`
+    <set>
+      <foreach collection="increateNumbers" item="numberCloums">
+        `${numberCloums.column}` = `${numberCloums.column}` + #{numberCloums.number},
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <sql id="map_params_where_condition" >
+    <trim prefix="WHERE" prefixOverrides="AND">
+	  <if test="id != null" >
+        AND `id` = #{id}
+	  </if>
+	  <if test="pictureCode != null" >
+        AND `picture_code` = #{pictureCode}
+	  </if>
+	  <if test="orderNo != null" >
+        AND `order_no` = #{orderNo}
+	  </if>
+	  <if test="txid != null" >
+        AND `txid` = #{txid}
+	  </if>
+	  <if test="cityCode != null" >
+        AND `city_code` = #{cityCode}
+	  </if>
+	  <if test="userCode != null" >
+        AND `user_code` = #{userCode}
+	  </if>
+	  <if test="likeNumber != null" >
+        AND `like_number` = #{likeNumber}
+	  </if>
+	  <if test="createTime != null" >
+        AND `create_time` = #{createTime}
+	  </if>
+	  <if test="cityName != null" >
+        AND `city_name` = #{cityName}
+	  </if>
+	  <if test="isShow != null" >
+        AND `is_show` = #{isShow}
+	  </if>
+	  <if test="version != null" >
+        AND `version` = #{version}
+	  </if>
+	  <if test="condition != null">
+	  <if test="condition.id != null" >
+        AND `id` = #{condition.id}
+	  </if>
+	  <if test="condition.pictureCode != null" >
+        AND `picture_code` = #{condition.pictureCode}
+	  </if>
+	  <if test="condition.orderNo != null" >
+        AND `order_no` = #{condition.orderNo}
+	  </if>
+	  <if test="condition.txid != null" >
+        AND `txid` = #{condition.txid}
+	  </if>
+	  <if test="condition.cityCode != null" >
+        AND `city_code` = #{condition.cityCode}
+	  </if>
+	  <if test="condition.userCode != null" >
+        AND `user_code` = #{condition.userCode}
+	  </if>
+	  <if test="condition.likeNumber != null" >
+        AND `like_number` = #{condition.likeNumber}
+	  </if>
+	  <if test="condition.createTime != null" >
+        AND `create_time` = #{condition.createTime}
+	  </if>
+	  <if test="condition.cityName != null" >
+        AND `city_name` = #{condition.cityName}
+	  </if>
+	  <if test="condition.isShow != null" >
+        AND `is_show` = #{condition.isShow}
+	  </if>
+	  <if test="condition.version != null" >
+        AND `version` = #{condition.version}
+	  </if>
+	  </if>
+	  <if test="vo != null and !vo.expressionChainList.empty">
+        AND
+        <foreach collection="vo.expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <if test="expressionChainList != null and !expressionChainList.empty">
+        AND
+        <foreach collection="expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <include refid="map_params_where_condition_ext" />
+    </trim>
+  </sql>
+  <select id="getList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM `bc_city_picture`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+    <if test="pageBeginIndex != null and pageSize != null" >
+      LIMIT #{pageBeginIndex},#{pageSize}
+    </if>
+    <if test="pageBeginIndex == null and pageSize != null" >
+      LIMIT #{pageSize}
+    </if>
+    <if test="pageBeginIndex != null and pageSize == null" >
+      LIMIT #{pageBeginIndex}
+    </if>
+  </select>
+  <delete id="delete" parameterType="java.util.Map" >
+    DELETE
+    FROM `bc_city_picture`
+    <include refid="map_params_where_condition" />
+  </delete>
+  <select id="getCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    SELECT COUNT(1)
+    FROM `bc_city_picture`
+    <include refid="map_params_where_condition" />
+  </select>
+</mapper>

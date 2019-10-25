@@ -1,0 +1,1 @@
+native2ascii -encoding UTF-8 ValidationMessages.properties ValidationMessages_zh_CN.properties

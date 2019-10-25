@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.CityDetailHistoryMapper" >
+  <resultMap id="BaseResultMap" type="com.yinmimoney.web.p2pnew.pojo.CityDetailHistory" extends="associationMap">
+	<id column="id" property="id" />
+	<result column="his_id" property="hisId" />
+	<result column="city_code" property="cityCode" />
+	<result column="his_user_code" property="hisUserCode" />
+	<result column="his_order_no" property="hisOrderNo" />
+	<result column="his_message_status" property="hisMessageStatus" />
+	<result column="his_message" property="hisMessage" />
+	<result column="his_city_sell_status" property="hisCitySellStatus" />
+	<result column="his_url" property="hisUrl" />
+	<result column="his_amount" property="hisAmount" />
+	<result column="his_currency" property="hisCurrency" />
+	<result column="create_time" property="createTime" />
+	<result column="update_time" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+		`id`
+		,`his_id`
+		,`city_code`
+		,`his_user_code`
+		,`his_order_no`
+		,`his_message_status`
+		,`his_message`
+		,`his_city_sell_status`
+		,`his_url`
+		,`his_amount`
+		,`his_currency`
+		,`create_time`
+		,`update_time`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `bc_city_detail_history`
+    WHERE `id` = #{id}
+  </select>
+  <select id="getByCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `bc_city_detail_history`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+	LIMIT 1
+  </select>
+  <select id="aggregate" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT ${aggregate_sql} FROM `bc_city_detail_history`
+    <include refid="map_params_where_condition" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    DELETE FROM `bc_city_detail_history`
+    WHERE `id` = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.yinmimoney.web.p2pnew.pojo.CityDetailHistory" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `bc_city_detail_history` (
+	  `his_id`
+	  ,`city_code`
+	  ,`his_user_code`
+	  ,`his_order_no`
+	  ,`his_message_status`
+	  ,`his_message`
+	  ,`his_city_sell_status`
+	  ,`his_url`
+	  ,`his_amount`
+	  ,`his_currency`
+	  ,`create_time`
+	  ,`update_time`
+      )
+    VALUES (
+		  
+		  #{hisId}
+		  ,
+		  #{cityCode}
+		  ,
+		  #{hisUserCode}
+		  ,
+		  #{hisOrderNo}
+		  ,
+		  #{hisMessageStatus}
+		  ,
+		  #{hisMessage}
+		  ,
+		  #{hisCitySellStatus}
+		  ,
+		  #{hisUrl}
+		  ,
+		  #{hisAmount}
+		  ,
+		  #{hisCurrency}
+		  ,
+		  <if test="createTime != null" >
+			#{createTime}
+      </if>
+      <if test="createTime == null" >
+      NOW()
+		  </if>
+		  ,
+		  <if test="updateTime != null" >
+			#{updateTime}
+      </if>
+      <if test="updateTime == null" >
+      NOW()
+		  </if>
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yinmimoney.web.p2pnew.pojo.CityDetailHistory" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `bc_city_detail_history`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+		  <if test="hisId != null" >
+			`his_id`,
+		  </if>
+		  <if test="cityCode != null" >
+			`city_code`,
+		  </if>
+		  <if test="hisUserCode != null" >
+			`his_user_code`,
+		  </if>
+		  <if test="hisOrderNo != null" >
+			`his_order_no`,
+		  </if>
+		  <if test="hisMessageStatus != null" >
+			`his_message_status`,
+		  </if>
+		  <if test="hisMessage != null" >
+			`his_message`,
+		  </if>
+		  <if test="hisCitySellStatus != null" >
+			`his_city_sell_status`,
+		  </if>
+		  <if test="hisUrl != null" >
+			`his_url`,
+		  </if>
+		  <if test="hisAmount != null" >
+			`his_amount`,
+		  </if>
+		  <if test="hisCurrency != null" >
+			`his_currency`,
+		  </if>
+			`create_time`,
+			`update_time`,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+		  <if test="hisId != null" >
+			#{hisId},
+		  </if>
+		  <if test="cityCode != null" >
+			#{cityCode},
+		  </if>
+		  <if test="hisUserCode != null" >
+			#{hisUserCode},
+		  </if>
+		  <if test="hisOrderNo != null" >
+			#{hisOrderNo},
+		  </if>
+		  <if test="hisMessageStatus != null" >
+			#{hisMessageStatus},
+		  </if>
+		  <if test="hisMessage != null" >
+			#{hisMessage},
+		  </if>
+		  <if test="hisCitySellStatus != null" >
+			#{hisCitySellStatus},
+		  </if>
+		  <if test="hisUrl != null" >
+			#{hisUrl},
+		  </if>
+		  <if test="hisAmount != null" >
+			#{hisAmount},
+		  </if>
+		  <if test="hisCurrency != null" >
+			#{hisCurrency},
+		  </if>
+		  <if test="createTime != null" >
+			#{createTime},
+      </if>
+      <if test="createTime == null" >
+      NOW(),
+		  </if>
+		  <if test="updateTime != null" >
+			#{updateTime},
+      </if>
+      <if test="updateTime == null" >
+      NOW(),
+		  </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yinmimoney.web.p2pnew.pojo.CityDetailHistory" >
+    UPDATE `bc_city_detail_history`
+    <set >
+	  <if test="hisId != null" >
+        `his_id` = #{hisId},
+      </if>
+	  <if test="cityCode != null" >
+        `city_code` = #{cityCode},
+      </if>
+	  <if test="hisUserCode != null" >
+        `his_user_code` = #{hisUserCode},
+      </if>
+	  <if test="hisOrderNo != null" >
+        `his_order_no` = #{hisOrderNo},
+      </if>
+	  <if test="hisMessageStatus != null" >
+        `his_message_status` = #{hisMessageStatus},
+      </if>
+	  <if test="hisMessage != null" >
+        `his_message` = #{hisMessage},
+      </if>
+	  <if test="hisCitySellStatus != null" >
+        `his_city_sell_status` = #{hisCitySellStatus},
+      </if>
+	  <if test="hisUrl != null" >
+        `his_url` = #{hisUrl},
+      </if>
+	  <if test="hisAmount != null" >
+        `his_amount` = #{hisAmount},
+      </if>
+	  <if test="hisCurrency != null" >
+        `his_currency` = #{hisCurrency},
+      </if>
+	  <if test="createTime != null" >
+        `create_time` = #{createTime},
+      </if>
+	  <if test="updateTime != null" >
+        `update_time` = #{updateTime},
+      </if>
+    </set>
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yinmimoney.web.p2pnew.pojo.CityDetailHistory" >
+	UPDATE `bc_city_detail_history` SET
+        `his_id` = #{hisId},
+        `city_code` = #{cityCode},
+        `his_user_code` = #{hisUserCode},
+        `his_order_no` = #{hisOrderNo},
+        `his_message_status` = #{hisMessageStatus},
+        `his_message` = #{hisMessage},
+        `his_city_sell_status` = #{hisCitySellStatus},
+        `his_url` = #{hisUrl},
+        `his_amount` = #{hisAmount},
+        `his_currency` = #{hisCurrency},
+        `create_time` = #{createTime},
+        `update_time` = #{updateTime}
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByCondition" parameterType="java.util.Map" >
+    UPDATE `bc_city_detail_history`
+    <set>
+	  <if test="entity.hisId != null" >
+        `his_id` = #{entity.hisId},
+      </if>
+	  <if test="entity.cityCode != null" >
+        `city_code` = #{entity.cityCode},
+      </if>
+	  <if test="entity.hisUserCode != null" >
+        `his_user_code` = #{entity.hisUserCode},
+      </if>
+	  <if test="entity.hisOrderNo != null" >
+        `his_order_no` = #{entity.hisOrderNo},
+      </if>
+	  <if test="entity.hisMessageStatus != null" >
+        `his_message_status` = #{entity.hisMessageStatus},
+      </if>
+	  <if test="entity.hisMessage != null" >
+        `his_message` = #{entity.hisMessage},
+      </if>
+	  <if test="entity.hisCitySellStatus != null" >
+        `his_city_sell_status` = #{entity.hisCitySellStatus},
+      </if>
+	  <if test="entity.hisUrl != null" >
+        `his_url` = #{entity.hisUrl},
+      </if>
+	  <if test="entity.hisAmount != null" >
+        `his_amount` = #{entity.hisAmount},
+      </if>
+	  <if test="entity.hisCurrency != null" >
+        `his_currency` = #{entity.hisCurrency},
+      </if>
+	  <if test="entity.createTime != null" >
+        `create_time` = #{entity.createTime},
+      </if>
+	  <if test="entity.updateTime != null" >
+        `update_time` = #{entity.updateTime},
+      </if>
+      <foreach collection="entity.nullColums" item="nullColum">
+        `${nullColum}` = NULL,
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <update id="updateIncreateNumbers" parameterType="java.util.Map" >
+    UPDATE `bc_city_detail_history`
+    <set>
+      <foreach collection="increateNumbers" item="numberCloums">
+        `${numberCloums.column}` = `${numberCloums.column}` + #{numberCloums.number},
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <sql id="map_params_where_condition" >
+    <trim prefix="WHERE" prefixOverrides="AND">
+	  <if test="id != null" >
+        AND `id` = #{id}
+	  </if>
+	  <if test="hisId != null" >
+        AND `his_id` = #{hisId}
+	  </if>
+	  <if test="cityCode != null" >
+        AND `city_code` = #{cityCode}
+	  </if>
+	  <if test="hisUserCode != null" >
+        AND `his_user_code` = #{hisUserCode}
+	  </if>
+	  <if test="hisOrderNo != null" >
+        AND `his_order_no` = #{hisOrderNo}
+	  </if>
+	  <if test="hisMessageStatus != null" >
+        AND `his_message_status` = #{hisMessageStatus}
+	  </if>
+	  <if test="hisMessage != null" >
+        AND `his_message` = #{hisMessage}
+	  </if>
+	  <if test="hisCitySellStatus != null" >
+        AND `his_city_sell_status` = #{hisCitySellStatus}
+	  </if>
+	  <if test="hisUrl != null" >
+        AND `his_url` = #{hisUrl}
+	  </if>
+	  <if test="hisAmount != null" >
+        AND `his_amount` = #{hisAmount}
+	  </if>
+	  <if test="hisCurrency != null" >
+        AND `his_currency` = #{hisCurrency}
+	  </if>
+	  <if test="createTime != null" >
+        AND `create_time` = #{createTime}
+	  </if>
+	  <if test="updateTime != null" >
+        AND `update_time` = #{updateTime}
+	  </if>
+	  <if test="condition != null">
+	  <if test="condition.id != null" >
+        AND `id` = #{condition.id}
+	  </if>
+	  <if test="condition.hisId != null" >
+        AND `his_id` = #{condition.hisId}
+	  </if>
+	  <if test="condition.cityCode != null" >
+        AND `city_code` = #{condition.cityCode}
+	  </if>
+	  <if test="condition.hisUserCode != null" >
+        AND `his_user_code` = #{condition.hisUserCode}
+	  </if>
+	  <if test="condition.hisOrderNo != null" >
+        AND `his_order_no` = #{condition.hisOrderNo}
+	  </if>
+	  <if test="condition.hisMessageStatus != null" >
+        AND `his_message_status` = #{condition.hisMessageStatus}
+	  </if>
+	  <if test="condition.hisMessage != null" >
+        AND `his_message` = #{condition.hisMessage}
+	  </if>
+	  <if test="condition.hisCitySellStatus != null" >
+        AND `his_city_sell_status` = #{condition.hisCitySellStatus}
+	  </if>
+	  <if test="condition.hisUrl != null" >
+        AND `his_url` = #{condition.hisUrl}
+	  </if>
+	  <if test="condition.hisAmount != null" >
+        AND `his_amount` = #{condition.hisAmount}
+	  </if>
+	  <if test="condition.hisCurrency != null" >
+        AND `his_currency` = #{condition.hisCurrency}
+	  </if>
+	  <if test="condition.createTime != null" >
+        AND `create_time` = #{condition.createTime}
+	  </if>
+	  <if test="condition.updateTime != null" >
+        AND `update_time` = #{condition.updateTime}
+	  </if>
+	  </if>
+	  <if test="vo != null and !vo.expressionChainList.empty">
+        AND
+        <foreach collection="vo.expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <if test="expressionChainList != null and !expressionChainList.empty">
+        AND
+        <foreach collection="expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <include refid="map_params_where_condition_ext" />
+    </trim>
+  </sql>
+  <select id="getList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM `bc_city_detail_history`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+    <if test="pageBeginIndex != null and pageSize != null" >
+      LIMIT #{pageBeginIndex},#{pageSize}
+    </if>
+    <if test="pageBeginIndex == null and pageSize != null" >
+      LIMIT #{pageSize}
+    </if>
+    <if test="pageBeginIndex != null and pageSize == null" >
+      LIMIT #{pageBeginIndex}
+    </if>
+  </select>
+  <delete id="delete" parameterType="java.util.Map" >
+    DELETE
+    FROM `bc_city_detail_history`
+    <include refid="map_params_where_condition" />
+  </delete>
+  <select id="getCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    SELECT COUNT(1)
+    FROM `bc_city_detail_history`
+    <include refid="map_params_where_condition" />
+  </select>
+</mapper>

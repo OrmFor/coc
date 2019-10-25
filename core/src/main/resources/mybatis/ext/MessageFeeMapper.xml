@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.MessageFeeMapper" >
+  <resultMap id="associationMap" type="com.yinmimoney.web.p2pnew.pojo.MessageFee" >
+    
+  </resultMap>
+  <sql id="map_params_where_condition_ext" >
+	<if test="extConditions != null">
+		<!-- 扩展条件 -->
+	</if>
+  </sql>
+
+    <select id="getMoneyOut" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        select sum(amount) from bc_message_fee
+        where user_code = #{userCode}
+
+    </select>
+</mapper>

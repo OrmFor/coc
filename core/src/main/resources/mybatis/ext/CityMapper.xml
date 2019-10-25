@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.CityMapper" >
+  <resultMap id="associationMap" type="com.yinmimoney.web.p2pnew.pojo.City" >
+    
+  </resultMap>
+
+    <resultMap id="getCityNameAndCodeResult" type="com.yinmimoney.web.p2pnew.dto.CityNameAndCode">
+        <result column="city_code" property="cityCode" />
+        <result column="city_name" property="cityName" />
+    </resultMap>
+
+    <resultMap id="getCheapCity" type="com.yinmimoney.web.p2pnew.dto.CheapCity">
+        <result column="city_code" property="cityCode" />
+        <result column="city_name" property="cityName" />
+        <result column="amount" property="amount"/>
+    </resultMap>
+
+
+    <resultMap id="getCityInRangeResult" type="com.yinmimoney.web.p2pnew.dto.CityZoomDto">
+        <result column="city_code" property="cityCode" />
+        <result column="city_name" property="cityName" />
+        <result column="init_status" property="initStatus" />
+        <result column="lon" property="lon" />
+        <result column="lat" property="lat" />
+    </resultMap>
+
+    <resultMap id="getCityInRangeResultNew" type="com.yinmimoney.web.p2pnew.dto.CityZoomDtoNew">
+        <result column="city_code" property="cC" />
+        <result column="user_code" property="uC" />
+        <result column="amount" property="at" />
+        <result column="city_sell_status" property="cSS" />
+        <result column="init_status" property="iS" />
+        <result column="lon" property="lon" />
+        <result column="lat" property="lat" />
+        <result column="city_name" property="cN" />
+
+    </resultMap>
+
+  <sql id="map_params_where_condition_ext" >
+	<if test="extConditions != null">
+		<!-- 扩展条件 -->
+	</if>
+  </sql>
+
+    <select id="getCityName" resultMap="getCityNameAndCodeResult" parameterType="java.util.HashMap">
+        select  `city_code` , `city_name` from `bc_city` b
+        <where>
+            b.`is_show` = 1
+            <if test="cityName != null">
+               and   b.`city_name_all` like concat('%', #{cityName}, '%')
+            </if>
+        </where>
+        limit 10
+
+    </select>
+
+    <select id="getCityInRange" resultMap="getCityInRangeResult" parameterType="java.util.HashMap">
+        select b.`city_code`, b.`init_status`,
+            b.city_name,b.lat,b.lon,b.init_status
+
+        from `bc_city` b
+        <where>
+            b.is_show = 1
+
+            <if test="minLat != null ">
+                and  b.lat &gt;= #{minLat}
+            </if>
+
+            <if test="maxLat != null ">
+                and  b.lat &lt;= #{maxLat}
+            </if>
+
+            <if test="minLng != null ">
+                and b.lon &gt;= #{minLng}
+            </if>
+
+            <if test="maxLng != null ">
+                and b.lon &lt;= #{maxLng}
+            </if>
+
+        </where>
+
+    </select>
+
+    <select id="getCityInRangeNew" resultMap="getCityInRangeResultNew" >
+        select b.`city_code`, b.`init_status`,
+        a.user_code,
+        a.amount,a.city_sell_status,b.city_name,b.lat,b.lon
+
+        from `bc_city` b left join bc_city_detail a on a.city_code = b.city_code
+        <where>
+            b.is_show = 1
+        </where>
+
+
+    </select>
+
+    <select id="getCheapCity" resultMap="getCheapCity">
+select a.city_name,a.city_code,
+IFNULL(b.amount,1) amount
+from bc_city a LEFT JOIN bc_city_detail b on a.city_code = b.city_code
+where a.is_show = 1
+and b.city_sell_status = 1
+ORDER BY amount
+ <if test="orderBy != null and orderBy =='desc' ">
+     desc
+ </if>
+   , a.id asc
+ limit #{beginIndex},#{pageSize};
+    </select>
+
+</mapper>

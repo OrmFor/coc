@@ -1,0 +1,58 @@
+<script type="text/javascript">
+$(function(){
+ // 数据	
+ var upright =  [];// 竖的数据
+ var upright2 =  [];// 竖的数据
+ var transverse =  [];// 横的数据
+ <#list list as bean>
+   upright.push('${bean.money}');
+   upright2.push('${bean.money2}');
+   transverse.push('${bean.date}');
+ </#list>
+ // 基于准备好的dom，初始化echarts实例
+ var myChart = echarts.init(document.getElementById('moneyStatistics-histogram'));
+ option = {
+		    tooltip : {
+		        trigger: 'axis',
+		        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+		            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+		        }
+		    },
+		    legend: {
+		        data:['邮件营销','联盟广告']
+		    },
+		    grid: {
+		        left: '3%',
+		        right: '4%',
+		        bottom: '3%',
+		        containLabel: true
+		    },
+		    xAxis : [
+		        {
+		            type : 'category',
+		            data : transverse
+		        }
+		    ],
+		    yAxis : [
+		        {
+		            type : 'value'
+		        }
+		    ],
+		    series : [
+		        {
+		            name:'邮件营销',
+		            type:'bar',
+		            data:upright
+		        },
+		        {
+		            name:'联盟广告',
+		            type:'bar',
+		            stack: '广告',
+		            data:upright2
+		        }
+     ]
+ };
+ // 使用刚指定的配置项和数据显示图表。
+ myChart.setOption(option);
+});
+</script>

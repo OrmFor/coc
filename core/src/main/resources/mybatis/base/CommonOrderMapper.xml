@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.CommonOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.yinmimoney.web.p2pnew.pojo.CommonOrder" extends="associationMap">
+	<id column="id" property="id" />
+	<result column="order_no" property="orderNo" />
+	<result column="operator_code" property="operatorCode" />
+	<result column="operate_type" property="operateType" />
+	<result column="city_code" property="cityCode" />
+	<result column="txid" property="txid" />
+	<result column="status" property="status" />
+	<result column="amount" property="amount" />
+	<result column="currency" property="currency" />
+	<result column="create_time" property="createTime" />
+	<result column="update_time" property="updateTime" />
+	<result column="acceptor_code" property="acceptorCode" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+		`id`
+		,`order_no`
+		,`operator_code`
+		,`operate_type`
+		,`city_code`
+		,`txid`
+		,`status`
+		,`amount`
+		,`currency`
+		,`create_time`
+		,`update_time`
+		,`acceptor_code`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `common_order`
+    WHERE `id` = #{id}
+  </select>
+  <select id="getByCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `common_order`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+	LIMIT 1
+  </select>
+  <select id="aggregate" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT ${aggregate_sql} FROM `common_order`
+    <include refid="map_params_where_condition" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    DELETE FROM `common_order`
+    WHERE `id` = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.yinmimoney.web.p2pnew.pojo.CommonOrder" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `common_order` (
+	  `order_no`
+	  ,`operator_code`
+	  ,`operate_type`
+	  ,`city_code`
+	  ,`txid`
+	  ,`status`
+	  ,`amount`
+	  ,`currency`
+	  ,`create_time`
+	  ,`update_time`
+	  ,`acceptor_code`
+      )
+    VALUES (
+		  
+		  #{orderNo}
+		  ,
+		  #{operatorCode}
+		  ,
+		  #{operateType}
+		  ,
+		  #{cityCode}
+		  ,
+		  #{txid}
+		  ,
+		  #{status}
+		  ,
+		  #{amount}
+		  ,
+		  #{currency}
+		  ,
+		  #{createTime}
+		  ,
+		  #{updateTime}
+		  ,
+		  #{acceptorCode}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yinmimoney.web.p2pnew.pojo.CommonOrder" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `common_order`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+		  <if test="orderNo != null" >
+			`order_no`,
+		  </if>
+		  <if test="operatorCode != null" >
+			`operator_code`,
+		  </if>
+		  <if test="operateType != null" >
+			`operate_type`,
+		  </if>
+		  <if test="cityCode != null" >
+			`city_code`,
+		  </if>
+		  <if test="txid != null" >
+			`txid`,
+		  </if>
+		  <if test="status != null" >
+			`status`,
+		  </if>
+		  <if test="amount != null" >
+			`amount`,
+		  </if>
+		  <if test="currency != null" >
+			`currency`,
+		  </if>
+		  <if test="createTime != null" >
+			`create_time`,
+		  </if>
+		  <if test="updateTime != null" >
+			`update_time`,
+		  </if>
+		  <if test="acceptorCode != null" >
+			`acceptor_code`,
+		  </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+		  <if test="orderNo != null" >
+			#{orderNo},
+		  </if>
+		  <if test="operatorCode != null" >
+			#{operatorCode},
+		  </if>
+		  <if test="operateType != null" >
+			#{operateType},
+		  </if>
+		  <if test="cityCode != null" >
+			#{cityCode},
+		  </if>
+		  <if test="txid != null" >
+			#{txid},
+		  </if>
+		  <if test="status != null" >
+			#{status},
+		  </if>
+		  <if test="amount != null" >
+			#{amount},
+		  </if>
+		  <if test="currency != null" >
+			#{currency},
+		  </if>
+		  <if test="createTime != null" >
+			#{createTime},
+		  </if>
+		  <if test="updateTime != null" >
+			#{updateTime},
+		  </if>
+		  <if test="acceptorCode != null" >
+			#{acceptorCode},
+		  </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yinmimoney.web.p2pnew.pojo.CommonOrder" >
+    UPDATE `common_order`
+    <set >
+	  <if test="orderNo != null" >
+        `order_no` = #{orderNo},
+      </if>
+	  <if test="operatorCode != null" >
+        `operator_code` = #{operatorCode},
+      </if>
+	  <if test="operateType != null" >
+        `operate_type` = #{operateType},
+      </if>
+	  <if test="cityCode != null" >
+        `city_code` = #{cityCode},
+      </if>
+	  <if test="txid != null" >
+        `txid` = #{txid},
+      </if>
+	  <if test="status != null" >
+        `status` = #{status},
+      </if>
+	  <if test="amount != null" >
+        `amount` = #{amount},
+      </if>
+	  <if test="currency != null" >
+        `currency` = #{currency},
+      </if>
+	  <if test="createTime != null" >
+        `create_time` = #{createTime},
+      </if>
+	  <if test="updateTime != null" >
+        `update_time` = #{updateTime},
+      </if>
+	  <if test="acceptorCode != null" >
+        `acceptor_code` = #{acceptorCode},
+      </if>
+    </set>
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yinmimoney.web.p2pnew.pojo.CommonOrder" >
+	UPDATE `common_order` SET
+        `order_no` = #{orderNo},
+        `operator_code` = #{operatorCode},
+        `operate_type` = #{operateType},
+        `city_code` = #{cityCode},
+        `txid` = #{txid},
+        `status` = #{status},
+        `amount` = #{amount},
+        `currency` = #{currency},
+        `create_time` = #{createTime},
+        `update_time` = #{updateTime},
+        `acceptor_code` = #{acceptorCode}
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByCondition" parameterType="java.util.Map" >
+    UPDATE `common_order`
+    <set>
+	  <if test="entity.orderNo != null" >
+        `order_no` = #{entity.orderNo},
+      </if>
+	  <if test="entity.operatorCode != null" >
+        `operator_code` = #{entity.operatorCode},
+      </if>
+	  <if test="entity.operateType != null" >
+        `operate_type` = #{entity.operateType},
+      </if>
+	  <if test="entity.cityCode != null" >
+        `city_code` = #{entity.cityCode},
+      </if>
+	  <if test="entity.txid != null" >
+        `txid` = #{entity.txid},
+      </if>
+	  <if test="entity.status != null" >
+        `status` = #{entity.status},
+      </if>
+	  <if test="entity.amount != null" >
+        `amount` = #{entity.amount},
+      </if>
+	  <if test="entity.currency != null" >
+        `currency` = #{entity.currency},
+      </if>
+	  <if test="entity.createTime != null" >
+        `create_time` = #{entity.createTime},
+      </if>
+	  <if test="entity.updateTime != null" >
+        `update_time` = #{entity.updateTime},
+      </if>
+	  <if test="entity.acceptorCode != null" >
+        `acceptor_code` = #{entity.acceptorCode},
+      </if>
+      <foreach collection="entity.nullColums" item="nullColum">
+        `${nullColum}` = NULL,
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <update id="updateIncreateNumbers" parameterType="java.util.Map" >
+    UPDATE `common_order`
+    <set>
+      <foreach collection="increateNumbers" item="numberCloums">
+        `${numberCloums.column}` = `${numberCloums.column}` + #{numberCloums.number},
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <sql id="map_params_where_condition" >
+    <trim prefix="WHERE" prefixOverrides="AND">
+	  <if test="id != null" >
+        AND `id` = #{id}
+	  </if>
+	  <if test="orderNo != null" >
+        AND `order_no` = #{orderNo}
+	  </if>
+	  <if test="operatorCode != null" >
+        AND `operator_code` = #{operatorCode}
+	  </if>
+	  <if test="operateType != null" >
+        AND `operate_type` = #{operateType}
+	  </if>
+	  <if test="cityCode != null" >
+        AND `city_code` = #{cityCode}
+	  </if>
+	  <if test="txid != null" >
+        AND `txid` = #{txid}
+	  </if>
+	  <if test="status != null" >
+        AND `status` = #{status}
+	  </if>
+	  <if test="amount != null" >
+        AND `amount` = #{amount}
+	  </if>
+	  <if test="currency != null" >
+        AND `currency` = #{currency}
+	  </if>
+	  <if test="createTime != null" >
+        AND `create_time` = #{createTime}
+	  </if>
+	  <if test="updateTime != null" >
+        AND `update_time` = #{updateTime}
+	  </if>
+	  <if test="acceptorCode != null" >
+        AND `acceptor_code` = #{acceptorCode}
+	  </if>
+	  <if test="condition != null">
+	  <if test="condition.id != null" >
+        AND `id` = #{condition.id}
+	  </if>
+	  <if test="condition.orderNo != null" >
+        AND `order_no` = #{condition.orderNo}
+	  </if>
+	  <if test="condition.operatorCode != null" >
+        AND `operator_code` = #{condition.operatorCode}
+	  </if>
+	  <if test="condition.operateType != null" >
+        AND `operate_type` = #{condition.operateType}
+	  </if>
+	  <if test="condition.cityCode != null" >
+        AND `city_code` = #{condition.cityCode}
+	  </if>
+	  <if test="condition.txid != null" >
+        AND `txid` = #{condition.txid}
+	  </if>
+	  <if test="condition.status != null" >
+        AND `status` = #{condition.status}
+	  </if>
+	  <if test="condition.amount != null" >
+        AND `amount` = #{condition.amount}
+	  </if>
+	  <if test="condition.currency != null" >
+        AND `currency` = #{condition.currency}
+	  </if>
+	  <if test="condition.createTime != null" >
+        AND `create_time` = #{condition.createTime}
+	  </if>
+	  <if test="condition.updateTime != null" >
+        AND `update_time` = #{condition.updateTime}
+	  </if>
+	  <if test="condition.acceptorCode != null" >
+        AND `acceptor_code` = #{condition.acceptorCode}
+	  </if>
+	  </if>
+	  <if test="vo != null and !vo.expressionChainList.empty">
+        AND
+        <foreach collection="vo.expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <if test="expressionChainList != null and !expressionChainList.empty">
+        AND
+        <foreach collection="expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <include refid="map_params_where_condition_ext" />
+    </trim>
+  </sql>
+  <select id="getList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM `common_order`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+    <if test="pageBeginIndex != null and pageSize != null" >
+      LIMIT #{pageBeginIndex},#{pageSize}
+    </if>
+    <if test="pageBeginIndex == null and pageSize != null" >
+      LIMIT #{pageSize}
+    </if>
+    <if test="pageBeginIndex != null and pageSize == null" >
+      LIMIT #{pageBeginIndex}
+    </if>
+  </select>
+  <delete id="delete" parameterType="java.util.Map" >
+    DELETE
+    FROM `common_order`
+    <include refid="map_params_where_condition" />
+  </delete>
+  <select id="getCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    SELECT COUNT(1)
+    FROM `common_order`
+    <include refid="map_params_where_condition" />
+  </select>
+</mapper>

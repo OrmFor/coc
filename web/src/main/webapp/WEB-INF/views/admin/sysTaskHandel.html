@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>定时任务 - 系统后台</title>
+
+		<meta name="description" content="Static &amp; Dynamic Tables" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<#include "/admin/include/cssjs_up.html" encoding="UTF-8"/>
+	</head>
+
+	<body>
+		<#assign adminMenuPosFlag="sysTaskHandel">
+		<#include "/admin/include/head.html" encoding="UTF-8"/>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				<a class="menu-toggler" id="menu-toggler" href="#">
+					<span class="menu-text"></span>
+				</a>
+				<#include "/admin/include/menu.html" encoding="UTF-8"/>
+				<div class="main-content">
+					<div class="breadcrumbs" id="breadcrumbs">
+						<script type="text/javascript">
+							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+						</script>
+
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home home-icon"></i>
+								<a href="/admin/">首页</a>
+							</li>
+							<li class="active">定时任务</li>
+						</ul><!-- .breadcrumb -->
+					</div>
+
+					<div class="page-content">
+						<div class="row">
+							<form method="post" action="/admin/sysTaskHandel/list">
+                <div class="col-xs-3 form-group">
+									<div class="input-group">
+									<div class="input-group-addon">任务名称:</div>
+									<input type="text" class="form-control" name="moduleName" value="${bean.moduleName}">
+									</div>
+								</div>
+                <div class="col-xs-3 form-group">
+									<div class="input-group">
+									<div class="input-group-addon">执行机器名称:</div>
+									<input type="text" class="form-control" name="hostname" value="${bean.hostname}">
+									</div>
+								</div>
+                <div class="col-xs-3 form-group">
+									<div class="input-group">
+									<div class="input-group-addon">是否启用:</div>
+									<select class="form-control" name="isEnabled">
+                    					<option value="">全部</option>
+                    					<option value="true" ${(bean.isEnabled?exists && bean.isEnabled)?string("selected","")}>启用</option>
+										<option value="false" ${(bean.isEnabled?exists && !bean.isEnabled)?string("selected","")}>禁用</option>
+                  					</select>
+                  </select>
+									</div>
+								</div>
+							  <div class="col-xs-2 col-sm-1 form-group">
+									<input type="hidden" name="token" value="${token}" />
+									<button class="btn btn-info btn-sm" type="submit">查询</button>
+								</div>
+							</form>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="table-responsive">
+											<table id="sample-table-1" class="table table-striped table-bordered table-hover">
+												<thead>
+													<tr>
+														<th>任务名称</th>
+														<th>执行机器名称</th>
+														<th>执行机器ip</th>
+														<th>是否启用</th>
+														<th>备注</th>
+														<th>创建时间</th>
+														<th class="text-center">操作</th>
+													</tr>
+												</thead>
+
+												<tbody>
+													<#list pageBean.result as bean>
+													<tr>
+														<td>
+														${bean.moduleName}
+														</td>
+														<td>
+														${bean.hostname}
+														</td>
+														<td>
+														${bean.ipAddress}
+														</td>
+														<td>
+															<#if bean.isEnabled>&nbsp;&nbsp;
+																<i class="icon-ok green"></i>
+															<#else>&nbsp;&nbsp;
+																<i class="icon-remove red"></i>
+															</#if>
+														</td>
+														<td>
+														${bean.remark}
+														</td>
+														<td>
+														<#if bean.createdAt?exists>
+														${bean.createdAt?datetime}
+														<#else>
+														-
+														</#if>
+														</td>
+														<td class="text-center">
+                              <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
+																<a class="red" href="javascript:" onclick="stopMsg('${bean.id}')">
+																	<i class="icon-lock bigger-120"></i>
+																</a>
+																<a class="red" href="javascript:" onclick="deleteMsg('${bean.id}')">
+																	<i class="icon-trash bigger-120"></i>
+																</a>
+															</div>
+														</td>
+													</tr>
+													</#list>
+												</tbody>
+											</table>
+											${pageBean.pageToolBar}
+										</div><!-- /.table-responsive -->
+									</div><!-- /span -->
+								</div><!-- /row -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+			</div><!-- /.main-container-inner -->
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="icon-double-angle-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+		<#include "/admin/include/cssjs_down.html" encoding="UTF-8"/>
+    <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.3.full.min.css" />
+    <script src="/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+	<script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+	<script src="/assets/js/bootbox.min.js"></script>
+	<script type="text/javascript">
+    $(function(){
+      $(".datepicker").datepicker({
+				showOtherMonths: true,
+				selectOtherMonths: false,
+				changeMonth: true,
+				changeYear: true,
+				yearRange: "1915:2020",
+				dateFormat: "yy-mm-dd",
+				monthNames: [ "一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月" ],
+				monthNamesShort : [ "一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月" ],
+        dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],  
+        dayNamesShort: ['周日','周一','周二','周三','周四','周五','周六'],  
+        dayNamesMin: ['日','一','二','三','四','五','六']
+			});
+		});
+    function deleteMsg(id){
+		bootbox.confirm("确定要删除吗?", function(result) {
+			if(result) {
+				$.ajax({
+					url:"/admin/sysTaskHandel/del/",
+					type:"POST",
+					data:{"id":id,"rnd":Math.random(),"token":"${token}"},
+					success:function(a){
+						if(a == "success"){
+							location.reload();
+						}else{
+							alert("删除失败" + a);
+						}
+					}
+				});
+			}
+		});
+	}
+	function stopMsg(id){
+		bootbox.confirm("确定要启用/停止该任务吗?", function(result) {
+			if(result) {
+				$.ajax({
+				url:"/admin/sysTaskHandel/enable/",
+				type:"POST",
+				data:{"id":id,"rnd":Math.random(),"token":"${token}"},
+				success:function(a){
+					if(a == "success"){
+						location.reload();
+					}else{
+						alert("启用/停止失败" + a);
+					}
+				}
+			});
+			}
+		});
+	}
+		</script>
+	</body>
+</html>

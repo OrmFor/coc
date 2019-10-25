@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.WorldCountryMapper" >
+  <resultMap id="BaseResultMap" type="com.yinmimoney.web.p2pnew.pojo.WorldCountry" extends="associationMap">
+	<id column="id" property="id" />
+	<result column="code" property="code" />
+	<result column="country_name_zh_hans" property="countryNameZhHans" />
+	<result column="country_name_zh_hant" property="countryNameZhHant" />
+	<result column="country_name_en" property="countryNameEn" />
+	<result column="continent" property="continent" />
+	<result column="add_time" property="addTime" />
+	<result column="pinyin" property="pinyin" />
+	<result column="pinyin_prefix" property="pinyinPrefix" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+		`id`
+		,`code`
+		,`country_name_zh_hans`
+		,`country_name_zh_hant`
+		,`country_name_en`
+		,`continent`
+		,`add_time`
+		,`pinyin`
+		,`pinyin_prefix`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `world_country`
+    WHERE `id` = #{id}
+  </select>
+  <select id="getByCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `world_country`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+	LIMIT 1
+  </select>
+  <select id="aggregate" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT ${aggregate_sql} FROM `world_country`
+    <include refid="map_params_where_condition" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    DELETE FROM `world_country`
+    WHERE `id` = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.yinmimoney.web.p2pnew.pojo.WorldCountry" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `world_country` (
+	  `code`
+	  ,`country_name_zh_hans`
+	  ,`country_name_zh_hant`
+	  ,`country_name_en`
+	  ,`continent`
+	  ,`add_time`
+	  ,`pinyin`
+	  ,`pinyin_prefix`
+      )
+    VALUES (
+		  
+		  #{code}
+		  ,
+		  #{countryNameZhHans}
+		  ,
+		  #{countryNameZhHant}
+		  ,
+		  #{countryNameEn}
+		  ,
+		  #{continent}
+		  ,
+		  #{addTime}
+		  ,
+		  #{pinyin}
+		  ,
+		  #{pinyinPrefix}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yinmimoney.web.p2pnew.pojo.WorldCountry" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `world_country`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+		  <if test="code != null" >
+			`code`,
+		  </if>
+		  <if test="countryNameZhHans != null" >
+			`country_name_zh_hans`,
+		  </if>
+		  <if test="countryNameZhHant != null" >
+			`country_name_zh_hant`,
+		  </if>
+		  <if test="countryNameEn != null" >
+			`country_name_en`,
+		  </if>
+		  <if test="continent != null" >
+			`continent`,
+		  </if>
+		  <if test="addTime != null" >
+			`add_time`,
+		  </if>
+		  <if test="pinyin != null" >
+			`pinyin`,
+		  </if>
+		  <if test="pinyinPrefix != null" >
+			`pinyin_prefix`,
+		  </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+		  <if test="code != null" >
+			#{code},
+		  </if>
+		  <if test="countryNameZhHans != null" >
+			#{countryNameZhHans},
+		  </if>
+		  <if test="countryNameZhHant != null" >
+			#{countryNameZhHant},
+		  </if>
+		  <if test="countryNameEn != null" >
+			#{countryNameEn},
+		  </if>
+		  <if test="continent != null" >
+			#{continent},
+		  </if>
+		  <if test="addTime != null" >
+			#{addTime},
+		  </if>
+		  <if test="pinyin != null" >
+			#{pinyin},
+		  </if>
+		  <if test="pinyinPrefix != null" >
+			#{pinyinPrefix},
+		  </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yinmimoney.web.p2pnew.pojo.WorldCountry" >
+    UPDATE `world_country`
+    <set >
+	  <if test="code != null" >
+        `code` = #{code},
+      </if>
+	  <if test="countryNameZhHans != null" >
+        `country_name_zh_hans` = #{countryNameZhHans},
+      </if>
+	  <if test="countryNameZhHant != null" >
+        `country_name_zh_hant` = #{countryNameZhHant},
+      </if>
+	  <if test="countryNameEn != null" >
+        `country_name_en` = #{countryNameEn},
+      </if>
+	  <if test="continent != null" >
+        `continent` = #{continent},
+      </if>
+	  <if test="addTime != null" >
+        `add_time` = #{addTime},
+      </if>
+	  <if test="pinyin != null" >
+        `pinyin` = #{pinyin},
+      </if>
+	  <if test="pinyinPrefix != null" >
+        `pinyin_prefix` = #{pinyinPrefix},
+      </if>
+    </set>
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yinmimoney.web.p2pnew.pojo.WorldCountry" >
+	UPDATE `world_country` SET
+        `code` = #{code},
+        `country_name_zh_hans` = #{countryNameZhHans},
+        `country_name_zh_hant` = #{countryNameZhHant},
+        `country_name_en` = #{countryNameEn},
+        `continent` = #{continent},
+        `add_time` = #{addTime},
+        `pinyin` = #{pinyin},
+        `pinyin_prefix` = #{pinyinPrefix}
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByCondition" parameterType="java.util.Map" >
+    UPDATE `world_country`
+    <set>
+	  <if test="entity.code != null" >
+        `code` = #{entity.code},
+      </if>
+	  <if test="entity.countryNameZhHans != null" >
+        `country_name_zh_hans` = #{entity.countryNameZhHans},
+      </if>
+	  <if test="entity.countryNameZhHant != null" >
+        `country_name_zh_hant` = #{entity.countryNameZhHant},
+      </if>
+	  <if test="entity.countryNameEn != null" >
+        `country_name_en` = #{entity.countryNameEn},
+      </if>
+	  <if test="entity.continent != null" >
+        `continent` = #{entity.continent},
+      </if>
+	  <if test="entity.addTime != null" >
+        `add_time` = #{entity.addTime},
+      </if>
+	  <if test="entity.pinyin != null" >
+        `pinyin` = #{entity.pinyin},
+      </if>
+	  <if test="entity.pinyinPrefix != null" >
+        `pinyin_prefix` = #{entity.pinyinPrefix},
+      </if>
+      <foreach collection="entity.nullColums" item="nullColum">
+        `${nullColum}` = NULL,
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <update id="updateIncreateNumbers" parameterType="java.util.Map" >
+    UPDATE `world_country`
+    <set>
+      <foreach collection="increateNumbers" item="numberCloums">
+        `${numberCloums.column}` = `${numberCloums.column}` + #{numberCloums.number},
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <sql id="map_params_where_condition" >
+    <trim prefix="WHERE" prefixOverrides="AND">
+	  <if test="id != null" >
+        AND `id` = #{id}
+	  </if>
+	  <if test="code != null" >
+        AND `code` = #{code}
+	  </if>
+	  <if test="countryNameZhHans != null" >
+        AND `country_name_zh_hans` = #{countryNameZhHans}
+	  </if>
+	  <if test="countryNameZhHant != null" >
+        AND `country_name_zh_hant` = #{countryNameZhHant}
+	  </if>
+	  <if test="countryNameEn != null" >
+        AND `country_name_en` = #{countryNameEn}
+	  </if>
+	  <if test="continent != null" >
+        AND `continent` = #{continent}
+	  </if>
+	  <if test="addTime != null" >
+        AND `add_time` = #{addTime}
+	  </if>
+	  <if test="pinyin != null" >
+        AND `pinyin` = #{pinyin}
+	  </if>
+	  <if test="pinyinPrefix != null" >
+        AND `pinyin_prefix` = #{pinyinPrefix}
+	  </if>
+	  <if test="condition != null">
+	  <if test="condition.id != null" >
+        AND `id` = #{condition.id}
+	  </if>
+	  <if test="condition.code != null" >
+        AND `code` = #{condition.code}
+	  </if>
+	  <if test="condition.countryNameZhHans != null" >
+        AND `country_name_zh_hans` = #{condition.countryNameZhHans}
+	  </if>
+	  <if test="condition.countryNameZhHant != null" >
+        AND `country_name_zh_hant` = #{condition.countryNameZhHant}
+	  </if>
+	  <if test="condition.countryNameEn != null" >
+        AND `country_name_en` = #{condition.countryNameEn}
+	  </if>
+	  <if test="condition.continent != null" >
+        AND `continent` = #{condition.continent}
+	  </if>
+	  <if test="condition.addTime != null" >
+        AND `add_time` = #{condition.addTime}
+	  </if>
+	  <if test="condition.pinyin != null" >
+        AND `pinyin` = #{condition.pinyin}
+	  </if>
+	  <if test="condition.pinyinPrefix != null" >
+        AND `pinyin_prefix` = #{condition.pinyinPrefix}
+	  </if>
+	  </if>
+	  <if test="vo != null and !vo.expressionChainList.empty">
+        AND
+        <foreach collection="vo.expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <if test="expressionChainList != null and !expressionChainList.empty">
+        AND
+        <foreach collection="expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <include refid="map_params_where_condition_ext" />
+    </trim>
+  </sql>
+  <select id="getList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM `world_country`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+    <if test="pageBeginIndex != null and pageSize != null" >
+      LIMIT #{pageBeginIndex},#{pageSize}
+    </if>
+    <if test="pageBeginIndex == null and pageSize != null" >
+      LIMIT #{pageSize}
+    </if>
+    <if test="pageBeginIndex != null and pageSize == null" >
+      LIMIT #{pageBeginIndex}
+    </if>
+  </select>
+  <delete id="delete" parameterType="java.util.Map" >
+    DELETE
+    FROM `world_country`
+    <include refid="map_params_where_condition" />
+  </delete>
+  <select id="getCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    SELECT COUNT(1)
+    FROM `world_country`
+    <include refid="map_params_where_condition" />
+  </select>
+</mapper>

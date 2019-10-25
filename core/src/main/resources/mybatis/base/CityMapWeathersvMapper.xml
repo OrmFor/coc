@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yinmimoney.web.p2pnew.dao.CityMapWeathersvMapper" >
+  <resultMap id="BaseResultMap" type="com.yinmimoney.web.p2pnew.pojo.CityMapWeathersv" extends="associationMap">
+	<id column="id" property="id" />
+	<result column="city_code" property="cityCode" />
+	<result column="city_name" property="cityName" />
+	<result column="lon" property="lon" />
+	<result column="lat" property="lat" />
+	<result column="ws_id" property="wsId" />
+	<result column="ws_city_name" property="wsCityName" />
+	<result column="country" property="country" />
+	<result column="distance" property="distance" />
+	<result column="population" property="population" />
+	<result column="is_show" property="isShow" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+		`id`
+		,`city_code`
+		,`city_name`
+		,`lon`
+		,`lat`
+		,`ws_id`
+		,`ws_city_name`
+		,`country`
+		,`distance`
+		,`population`
+		,`is_show`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `bc_city_map_weathersv`
+    WHERE `id` = #{id}
+  </select>
+  <select id="getByCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM `bc_city_map_weathersv`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+	LIMIT 1
+  </select>
+  <select id="aggregate" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT ${aggregate_sql} FROM `bc_city_map_weathersv`
+    <include refid="map_params_where_condition" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    DELETE FROM `bc_city_map_weathersv`
+    WHERE `id` = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.yinmimoney.web.p2pnew.pojo.CityMapWeathersv" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `bc_city_map_weathersv` (
+	  `city_code`
+	  ,`city_name`
+	  ,`lon`
+	  ,`lat`
+	  ,`ws_id`
+	  ,`ws_city_name`
+	  ,`country`
+	  ,`distance`
+	  ,`population`
+	  ,`is_show`
+      )
+    VALUES (
+		  
+		  #{cityCode}
+		  ,
+		  #{cityName}
+		  ,
+		  #{lon}
+		  ,
+		  #{lat}
+		  ,
+		  #{wsId}
+		  ,
+		  #{wsCityName}
+		  ,
+		  #{country}
+		  ,
+		  #{distance}
+		  ,
+		  #{population}
+		  ,
+		  #{isShow}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yinmimoney.web.p2pnew.pojo.CityMapWeathersv" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO `bc_city_map_weathersv`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+		  <if test="cityCode != null" >
+			`city_code`,
+		  </if>
+		  <if test="cityName != null" >
+			`city_name`,
+		  </if>
+		  <if test="lon != null" >
+			`lon`,
+		  </if>
+		  <if test="lat != null" >
+			`lat`,
+		  </if>
+		  <if test="wsId != null" >
+			`ws_id`,
+		  </if>
+		  <if test="wsCityName != null" >
+			`ws_city_name`,
+		  </if>
+		  <if test="country != null" >
+			`country`,
+		  </if>
+		  <if test="distance != null" >
+			`distance`,
+		  </if>
+		  <if test="population != null" >
+			`population`,
+		  </if>
+		  <if test="isShow != null" >
+			`is_show`,
+		  </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+		  <if test="cityCode != null" >
+			#{cityCode},
+		  </if>
+		  <if test="cityName != null" >
+			#{cityName},
+		  </if>
+		  <if test="lon != null" >
+			#{lon},
+		  </if>
+		  <if test="lat != null" >
+			#{lat},
+		  </if>
+		  <if test="wsId != null" >
+			#{wsId},
+		  </if>
+		  <if test="wsCityName != null" >
+			#{wsCityName},
+		  </if>
+		  <if test="country != null" >
+			#{country},
+		  </if>
+		  <if test="distance != null" >
+			#{distance},
+		  </if>
+		  <if test="population != null" >
+			#{population},
+		  </if>
+		  <if test="isShow != null" >
+			#{isShow},
+		  </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yinmimoney.web.p2pnew.pojo.CityMapWeathersv" >
+    UPDATE `bc_city_map_weathersv`
+    <set >
+	  <if test="cityCode != null" >
+        `city_code` = #{cityCode},
+      </if>
+	  <if test="cityName != null" >
+        `city_name` = #{cityName},
+      </if>
+	  <if test="lon != null" >
+        `lon` = #{lon},
+      </if>
+	  <if test="lat != null" >
+        `lat` = #{lat},
+      </if>
+	  <if test="wsId != null" >
+        `ws_id` = #{wsId},
+      </if>
+	  <if test="wsCityName != null" >
+        `ws_city_name` = #{wsCityName},
+      </if>
+	  <if test="country != null" >
+        `country` = #{country},
+      </if>
+	  <if test="distance != null" >
+        `distance` = #{distance},
+      </if>
+	  <if test="population != null" >
+        `population` = #{population},
+      </if>
+	  <if test="isShow != null" >
+        `is_show` = #{isShow},
+      </if>
+    </set>
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yinmimoney.web.p2pnew.pojo.CityMapWeathersv" >
+	UPDATE `bc_city_map_weathersv` SET
+        `city_code` = #{cityCode},
+        `city_name` = #{cityName},
+        `lon` = #{lon},
+        `lat` = #{lat},
+        `ws_id` = #{wsId},
+        `ws_city_name` = #{wsCityName},
+        `country` = #{country},
+        `distance` = #{distance},
+        `population` = #{population},
+        `is_show` = #{isShow}
+    WHERE `id` = #{id}
+  </update>
+  <update id="updateByCondition" parameterType="java.util.Map" >
+    UPDATE `bc_city_map_weathersv`
+    <set>
+	  <if test="entity.cityCode != null" >
+        `city_code` = #{entity.cityCode},
+      </if>
+	  <if test="entity.cityName != null" >
+        `city_name` = #{entity.cityName},
+      </if>
+	  <if test="entity.lon != null" >
+        `lon` = #{entity.lon},
+      </if>
+	  <if test="entity.lat != null" >
+        `lat` = #{entity.lat},
+      </if>
+	  <if test="entity.wsId != null" >
+        `ws_id` = #{entity.wsId},
+      </if>
+	  <if test="entity.wsCityName != null" >
+        `ws_city_name` = #{entity.wsCityName},
+      </if>
+	  <if test="entity.country != null" >
+        `country` = #{entity.country},
+      </if>
+	  <if test="entity.distance != null" >
+        `distance` = #{entity.distance},
+      </if>
+	  <if test="entity.population != null" >
+        `population` = #{entity.population},
+      </if>
+	  <if test="entity.isShow != null" >
+        `is_show` = #{entity.isShow},
+      </if>
+      <foreach collection="entity.nullColums" item="nullColum">
+        `${nullColum}` = NULL,
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <update id="updateIncreateNumbers" parameterType="java.util.Map" >
+    UPDATE `bc_city_map_weathersv`
+    <set>
+      <foreach collection="increateNumbers" item="numberCloums">
+        `${numberCloums.column}` = `${numberCloums.column}` + #{numberCloums.number},
+      </foreach>
+    </set>
+    <include refid="map_params_where_condition" />
+  </update>
+  <sql id="map_params_where_condition" >
+    <trim prefix="WHERE" prefixOverrides="AND">
+	  <if test="id != null" >
+        AND `id` = #{id}
+	  </if>
+	  <if test="cityCode != null" >
+        AND `city_code` = #{cityCode}
+	  </if>
+	  <if test="cityName != null" >
+        AND `city_name` = #{cityName}
+	  </if>
+	  <if test="lon != null" >
+        AND `lon` = #{lon}
+	  </if>
+	  <if test="lat != null" >
+        AND `lat` = #{lat}
+	  </if>
+	  <if test="wsId != null" >
+        AND `ws_id` = #{wsId}
+	  </if>
+	  <if test="wsCityName != null" >
+        AND `ws_city_name` = #{wsCityName}
+	  </if>
+	  <if test="country != null" >
+        AND `country` = #{country}
+	  </if>
+	  <if test="distance != null" >
+        AND `distance` = #{distance}
+	  </if>
+	  <if test="population != null" >
+        AND `population` = #{population}
+	  </if>
+	  <if test="isShow != null" >
+        AND `is_show` = #{isShow}
+	  </if>
+	  <if test="condition != null">
+	  <if test="condition.id != null" >
+        AND `id` = #{condition.id}
+	  </if>
+	  <if test="condition.cityCode != null" >
+        AND `city_code` = #{condition.cityCode}
+	  </if>
+	  <if test="condition.cityName != null" >
+        AND `city_name` = #{condition.cityName}
+	  </if>
+	  <if test="condition.lon != null" >
+        AND `lon` = #{condition.lon}
+	  </if>
+	  <if test="condition.lat != null" >
+        AND `lat` = #{condition.lat}
+	  </if>
+	  <if test="condition.wsId != null" >
+        AND `ws_id` = #{condition.wsId}
+	  </if>
+	  <if test="condition.wsCityName != null" >
+        AND `ws_city_name` = #{condition.wsCityName}
+	  </if>
+	  <if test="condition.country != null" >
+        AND `country` = #{condition.country}
+	  </if>
+	  <if test="condition.distance != null" >
+        AND `distance` = #{condition.distance}
+	  </if>
+	  <if test="condition.population != null" >
+        AND `population` = #{condition.population}
+	  </if>
+	  <if test="condition.isShow != null" >
+        AND `is_show` = #{condition.isShow}
+	  </if>
+	  </if>
+	  <if test="vo != null and !vo.expressionChainList.empty">
+        AND
+        <foreach collection="vo.expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <if test="expressionChainList != null and !expressionChainList.empty">
+        AND
+        <foreach collection="expressionChainList" item="expressionChain" separator="OR">
+          <if test="!expressionChain.expressionList.empty">
+            <foreach collection="expressionChain.expressionList" item="expression" separator="AND">
+              <choose>
+                <when test="expression.type == 0">
+                  `${expression.column}` ${expression.operator}
+                </when>
+                <when test="expression.type == 1">
+                  `${expression.column}` ${expression.operator} #{expression.value}
+                </when>
+                <when test="expression.type == 2">
+                  `${expression.column}` ${expression.operator} #{expression.value} AND #{expression.value1}
+                </when>
+                <when test="expression.type == 3">
+                  `${expression.column}` ${expression.operator}
+                  <foreach collection="expression.values" item="value" open="(" separator="," close=")">
+                    #{value}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </if>
+        </foreach>
+      </if>
+      <include refid="map_params_where_condition_ext" />
+    </trim>
+  </sql>
+  <select id="getList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM `bc_city_map_weathersv`
+    <include refid="map_params_where_condition" />
+    <if test="orderBy == null" >
+      ORDER BY `id` DESC
+    </if>
+    <if test="orderBy != null and orderBy != 'no'" >
+      ORDER BY ${orderBy}
+    </if>
+    <if test="pageBeginIndex != null and pageSize != null" >
+      LIMIT #{pageBeginIndex},#{pageSize}
+    </if>
+    <if test="pageBeginIndex == null and pageSize != null" >
+      LIMIT #{pageSize}
+    </if>
+    <if test="pageBeginIndex != null and pageSize == null" >
+      LIMIT #{pageBeginIndex}
+    </if>
+  </select>
+  <delete id="delete" parameterType="java.util.Map" >
+    DELETE
+    FROM `bc_city_map_weathersv`
+    <include refid="map_params_where_condition" />
+  </delete>
+  <select id="getCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    SELECT COUNT(1)
+    FROM `bc_city_map_weathersv`
+    <include refid="map_params_where_condition" />
+  </select>
+</mapper>
